@@ -1,0 +1,44 @@
+spring:
+  main:
+    banner-mode: "off"
+  profiles:
+    active: main
+  influxdb:
+    url: http://<host>:<port>
+    username: <login>
+    password: <password>
+    database: <database>
+    retention-policy: <retention policy>
+    gzip: true
+
+amqp:
+  url: <amqp service access URL>
+  key:
+    wallet:  info.wallet
+    network: info.network
+    rig:     rig.worker
+    pool:    pool.worker
+
+test:
+  // for testing only (to run application for predefined time)
+  // in production (when application should be running indefinitely) remove this
+  // parameter or set it to 0
+  duration: 600000
+
+logging:
+  pattern:
+    console: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    root: ERROR
+    org.springframework: WARN
+    org.hibernate: ERROR
+    ws.slink: WARN
+    ws.slink.mine.mq: WARN
+
+// metrics for InfluxDB
+influxdb:
+  metric:
+    balance: balance.wallet
+    blockchain: blockchain.network
+    rig: rig
+    pool: pool.worker

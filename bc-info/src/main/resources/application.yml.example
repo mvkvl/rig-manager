@@ -1,0 +1,64 @@
+spring:
+  main:
+    banner-mode: "off"
+  profiles:
+    active: main
+
+amqp:
+  url: <amqp service access url>
+  key:
+    wallet:  info.wallet
+    network: info.network
+
+test:
+  duration: 15000
+
+schedule:
+  timeout:
+    wallet:  30  # (s) scheduled task timeout for wallet balance updates
+    network: 20  # (s) scheduled task timeout for network info updates
+  maxdelay:  10  # (s) maximum task startup delay
+
+logging:
+  pattern:
+    console: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    root: ERROR
+    org.springframework: WARN
+    org.hibernate: ERROR
+    ws.slink: WARN
+    ws.slink.mine.mq: TRACE
+    ws.slink.mine.blockchain: DEBUG
+
+api:
+  network:
+    rvn:
+      url: https://ravencoin.network/api/status?q=getMiningInfo
+      field:   miningInfo     # field of response to read
+      diff:    difficulty     # response item for network difficulty
+      nethash: networkhashps  # response item for network hashrate
+    zec:
+      url: https://api.zcha.in/v2/mainnet/network
+      field: ""
+      diff: difficulty
+      nethash: hashrate
+  wallet:
+    rvn:
+      url: https://ravencoin.network/api/addr/%WALLET%?noTxList=1
+    zen:
+      url: https://explorer.zensystem.io/insight-api-zen/addr/%WALLET%?noTxList=1
+    zec:
+      url: https://api.zcha.in/v2/mainnet/accounts/%WALLET%
+
+wallet:
+  rvn:
+    mining:  <wallet address>
+    holding: <wallet address>
+  zen:
+    mining:  <wallet address>
+    holding: <wallet address>
+  zec:
+    mining:  <wallet address>
+    holding: <wallet address>
+
+
