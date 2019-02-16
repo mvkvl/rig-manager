@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+import ws.slink.mine.influxdb.InfluxDBReader;
 import ws.slink.mine.model.BalanceData;
 import ws.slink.mine.model.Crypto;
 import ws.slink.mine.model.GPUData;
@@ -38,14 +39,17 @@ public class InformationAggregator {
     @Value("${schedule.timeout.maxdelay:15}")
     private int maxDelay;
 
+    @Autowired
+    private InfluxDBReader influxDBReader;
+
+    @Autowired
+    private InfluxDBTemplate<Point> influxDBTemplate;
+
     @Value("${spring.influxdb.database}")
     private String influxDatabaseName;
 
     @Value("${spring.influxdb.retention-policy}")
     private String influxRetentionPolicy;
-
-    @Autowired
-    private InfluxDBTemplate<Point> influxDBTemplate;
 
     private Map<String, List<? extends Object>> data = new ConcurrentHashMap<>();
 
@@ -83,13 +87,13 @@ public class InformationAggregator {
     }
 
     /* ------------- SCHEDULED TASKS ------------------- */
-    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
-    private void updateData() {
-        updateWorkersData();
-        updateGPUData();
-        updateBalanceData();
-    }
 //    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
+//    private void updateData() {
+//        updateWorkersData();
+////        updateGPUData();
+//        updateBalanceData();
+//    }
+    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
     private void updateWorkersData() {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
@@ -118,7 +122,7 @@ public class InformationAggregator {
                     new Object[]{data.get("worker").size(), sw.getTotalTimeSeconds()});
         }
     }
-//    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
+    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
     private void updateGPUData() {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
@@ -146,7 +150,7 @@ public class InformationAggregator {
                           new Object[]{data.get("gpu").size(), sw.getTotalTimeSeconds()});
         }
     }
-//    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
+    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
     private void updateBalanceData() {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
@@ -188,20 +192,12 @@ public class InformationAggregator {
         }
     }
 
-    /* --------------- COMMON DATA --------------------- */
-    private List<String> tags(String measurement, String key) {
-        Query query = new Query("SHOW TAG VALUES FROM \"" + measurement +
-                                "\" WITH KEY = \"" + key + "\"", influxDatabaseName);
-        QueryResult res = influxDBTemplate.query(query);
-        return res.getResults().get(0).getSeries().get(0).getValues().stream().map(l -> l.get(1).toString()).collect(Collectors.toList());
-    }
-
     /* --------------- WORKER DATA --------------------- */
     private List<WorkerData> getWorkers() {
-        List<String> rw = getActiveRigWorkers(tags("rig.worker", "host"),
-                                     tags("rig.worker", "worker")); //rigs(), workers());
-        List<String> pw = getActivePoolWorkers(tags("pool.worker", "pool"),
-                                               tags("rig.worker", "worker")); //pools(), workers());
+        List<String> rw = getActiveRigWorkers(influxDBReader.tags("rig.worker", "host"),
+                influxDBReader.tags("rig.worker", "worker")); //rigs(), workers());
+        List<String> pw = getActivePoolWorkers(influxDBReader.tags("pool.worker", "pool"),
+                influxDBReader.tags("rig.worker", "worker")); //pools(), workers());
         Map<String, WorkerData> w = new HashMap<>();
         rw.stream().forEach(v -> {
             String [] ss = v.split("\\.", 2);
@@ -219,8 +215,8 @@ public class InformationAggregator {
     }
     private List<String> getActiveRigWorkers(List<String> rigs, List<String> workers) {
         List<String> result = new ArrayList<>();
-        rigs.stream().forEach( r -> {
-            workers.stream().forEach( w -> {
+        rigs.parallelStream().forEach( r -> {
+            workers.parallelStream().forEach( w -> {
                 if (getRigWorkerHashrate(r, w) > 0.0)
                     result.add(r + "." + w);
             });
@@ -229,8 +225,8 @@ public class InformationAggregator {
     }
     private List<String> getActivePoolWorkers(List<String> pools, List<String> workers) {
         List<String> result = new ArrayList<>();
-        pools.stream().forEach( p -> {
-            workers.stream().forEach( w -> {
+        pools.parallelStream().forEach( p -> {
+            workers.parallelStream().forEach( w -> {
                 if (getPoolWorkerHashrate(p, w) > 0.0)
                     result.add(p + "." + w);
             });
@@ -277,9 +273,10 @@ public class InformationAggregator {
     /* ----------------- GPU DATA ---------------------- */
     private List<GPUData> getGPUs() {
         List<GPUData> g = new ArrayList<>();
-        getActiveRigWorkerGPU( tags("rig.worker", "host"),   // rigs(),
-                               tags("rig.worker", "worker"), // workers(),
-                               tags("rig.gpu", "gpu")        // gpus()
+        getActiveRigWorkerGPU(
+                influxDBReader.tags("rig.worker", "host"),   // rigs(),
+                influxDBReader.tags("rig.worker", "worker"), // workers(),
+                influxDBReader.tags("rig.gpu", "gpu")        // gpus()
                              ).stream().forEach(v -> {
             String [] ss = v.split("\\.", 3);
             g.add(new GPUData().id(Integer.parseInt(ss[2])).worker(ss[1]).rig(ss[0]));
@@ -328,11 +325,11 @@ public class InformationAggregator {
 
     /* --------------- WALLET DATA --------------------- */
     private List<BalanceData> getBalances(List<WorkerData> wk) {
-        List<String>          cr = tags("balance.wallet", "crypto");
+        List<String>          cr = influxDBReader.tags("balance.wallet", "crypto");
         List<BalanceData> result = new ArrayList<>();
-        cr.stream().forEach(c -> {
+        cr.parallelStream().forEach(c -> {
             result.addAll(getWalletBalances(c));
-            wk.stream().forEach(v -> result.addAll(getPoolBalances(c, v.pool())));
+            wk.parallelStream().forEach(v -> result.addAll(getPoolBalances(c, v.pool())));
         });
         return result;
     }
@@ -343,12 +340,16 @@ public class InformationAggregator {
                 .QueryBuilder
                 .newQuery("SELECT last(\"mining\") as \"lm\", last(\"holding\") as \"lh\" FROM " +
                         "\"" + influxRetentionPolicy + "\".\"balance.wallet\" " +
-                        "WHERE time > now() - " + QUERY_PERIOD +" AND crypto = $crypto")
+                        "WHERE time > now() - 30m AND crypto = $crypto")
                 .forDatabase(influxDatabaseName)
                 .bind("crypto", crypto)
                 .create();
+//        QueryResult results = influxDBReader.getPoint(query); //influxDBTemplate.query(query);
         QueryResult results = influxDBTemplate.query(query);
+
         List<QueryResult.Series> sl = results.getResults().get(0).getSeries();
+
+//        System.out.println("   >>>>> " + results);
 
         if (null != sl) {
             result.add(
@@ -375,7 +376,7 @@ public class InformationAggregator {
                 .QueryBuilder
                 .newQuery("SELECT last(\"confirmed\") as \"cb\", last(\"unconfirmed\") as \"ub\" FROM " +
                         "\"" + influxRetentionPolicy + "\".\"balance.pool\" " +
-                        "WHERE time > now() - " + QUERY_PERIOD +" AND crypto = $crypto AND pool = $pool")
+                        "WHERE time > now() - 5m AND crypto = $crypto AND pool = $pool")
                 .forDatabase(influxDatabaseName)
                 .bind("crypto", crypto)
                 .bind("pool", pool)
@@ -403,49 +404,7 @@ public class InformationAggregator {
     }
 }
 
-
-//    @PostConstruct
-//    public void init() {
-//        influxDBTemplate.createDatabase();
-//        influxDBTemplate.getRetentionPolicy();
-//    }
-
-//    private final Object syncObj = new Object();
-
-
 /*
-
-      workers : [
-        {
-          worker_name_1 : {
-            rigs : [
-              { name : "", cur: "", avg1d: "", avg1w : "", avg1m : ""},
-                ...
-            ],
-            pools : [
-              { name : "", cur: "", avg1d: "", avg1w : "", avg1m : ""},
-                ...
-            ]
-          }
-        }
-      ],
-      gpus : [
-         rig_name: {
-           worker_name : {
-             gpu0: {
-             }
-           }
-         }
-      ]
-
-
-
-
-
-
-
-
-
         WORKER INFO:
         ----------------------------------------
         worker_name_1                                 // 1. подтянуть список активных worker'ов
@@ -488,68 +447,3 @@ public class InformationAggregator {
            pool_name:                  // <- for active workers only !
               RVN:       xx [     yy]
         ----------------------------------------                        */
-
-
-
-/*
-        public List<String> rigs() {
-            Query query = new Query("SHOW TAG VALUES FROM \"rig.worker\" WITH KEY = \"host\"", influxDatabaseName);
-            QueryResult res = influxDBTemplate.query(query);
-            return res.getResults().get(0).getSeries().get(0).getValues().stream().map(l -> l.get(1).toString()).collect(Collectors.toList());
-        }
-        public List<String> workers() {
-            Query query = new Query("SHOW TAG VALUES FROM \"rig.worker\" WITH KEY = \"worker\"", influxDatabaseName);
-            QueryResult res = influxDBTemplate.query(query);
-            return res.getResults().get(0).getSeries().get(0).getValues().stream().map(l -> l.get(1).toString()).collect(Collectors.toList());
-        }
-        public List<String> pools() {
-            Query query = new Query("SHOW TAG VALUES FROM \"pool.worker\" WITH KEY = \"pool\"", influxDatabaseName);
-            QueryResult res = influxDBTemplate.query(query);
-            return res.getResults().get(0).getSeries().get(0).getValues().stream().map(l -> l.get(1).toString()).collect(Collectors.toList());
-        }
-        public List<String> gpus() {
-            Query query = new Query("SHOW TAG VALUES FROM \"rig.gpu\" WITH KEY = \"gpu\"", influxDatabaseName);
-            QueryResult res = influxDBTemplate.query(query);
-            return res.getResults().get(0).getSeries().get(0).getValues().stream().map(l -> l.get(1).toString()).collect(Collectors.toList());
-        }
-        public List<String> cryptos() {
-            Query query = new Query("SHOW TAG VALUES FROM \"balance.wallet\" WITH KEY = \"crypto\"", influxDatabaseName);
-            QueryResult res = influxDBTemplate.query(query);
-            return res.getResults().get(0).getSeries().get(0).getValues().stream().map(l -> l.get(1).toString()).collect(Collectors.toList());
-        }
-*/
-
-
-
-//    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
-//    public void updateData() {
-//        synchronized (aggregatedGPUData) {
-//            StopWatch sw = new StopWatch();
-//            sw.start();
-//
-//            aggregatedBalanceData = getBalances(aggregatedWorkerData);
-//
-//            periods.parallelStream().forEach(p -> {
-//                String key = (p.equalsIgnoreCase(QUERY_PERIOD)) ? "cur" : p;
-//                aggregatedWorkerData.parallelStream().forEach(wd -> {
-//                    wd.rigRate(key, getAverageWorkerHashrate("rig", "host", wd.rig, wd.worker, p));
-//                    wd.poolRate(key, getAverageWorkerHashrate("pool", "pool", wd.pool, wd.worker, p));
-//                });
-//                aggregatedGPUData.parallelStream().forEach(gd -> {
-//                    GPUData ngd = getGPUData(gd.rig, gd.worker, gd.id + "", p);
-//                    gd.hashrate(key, ngd.hashrate(p));
-//                    gd.temperature(key, ngd.temperature(p));
-//                    gd.power(key, ngd.power(p));
-//                });
-//            });
-//
-//            aggregatedWorkerData.stream().forEach(System.out::println);
-//            aggregatedGPUData.stream().forEach(System.out::println);
-//            aggregatedBalanceData.stream().forEach(System.out::println);
-//
-//            sw.stop();
-//            System.out.println(sw.getTotalTimeMillis() / 1000.0);
-//
-//        }
-//    }
-
