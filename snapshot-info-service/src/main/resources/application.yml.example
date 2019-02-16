@@ -1,0 +1,41 @@
+spring:
+  main:
+    banner-mode: "off"
+  profiles:
+    active: main
+
+amqp:
+  url: <amqp service url>
+  key:
+    rig:  rig.worker
+    pool: pool.worker
+
+test:
+  duration: 60000
+
+schedule:
+  timeout:
+    rig:    20000  # (ms) scheduled task timeout for rig information updates
+    pool:   60000  # (ms) scheduled task timeout for pool information updates
+  maxdelay:  5000  # (ms) maximum task startup delay
+
+logging:
+  pattern:
+    console: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    root: ERROR
+    org.springframework: WARN
+    org.hibernate: ERROR
+    ws.slink: WARN
+    ws.slink.mine.mq: TRACE
+    ws.slink.mine.blockchain: DEBUG
+    ws.slink.mine.info: DEBUG
+    ws.slink.mine.info.api.pool: TRACE
+
+api:
+  pool:
+    key:
+      suprnova: <suprnova access key>
+  miner:
+    urls:
+      <miner-ws service access url> # comma-separated list of info URLs

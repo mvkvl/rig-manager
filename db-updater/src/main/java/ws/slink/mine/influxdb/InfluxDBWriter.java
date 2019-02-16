@@ -21,8 +21,11 @@ public class InfluxDBWriter {
     @Autowired
     private InfluxDBTemplate<Point> influxDBTemplate;
 
-    @Value("${influxdb.metric.balance:balance.wallet.default}")
-    private String balanceMetric;
+    @Value("${influxdb.metric.balance.pool:balance.pool.default}")
+    private String balancePoolMetric;
+
+    @Value("${influxdb.metric.balance.wallet:balance.wallet.default}")
+    private String balanceWalletMetric;
 
     @Value("${influxdb.metric.blockchain:blockchain.network.default}")
     private String blockchainMetric;
@@ -40,7 +43,7 @@ public class InfluxDBWriter {
 
     public void writeWalletInfo(List<WalletInfo> values) {
         influxDBTemplate.write(
-            values.stream().map(w -> Point.measurement(balanceMetric)
+            values.stream().map(w -> Point.measurement(balanceWalletMetric)
                                           .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                                           .tag("crypto", w.crypto.toString())
                                           .addField(w.wallet, w.amount)
@@ -66,14 +69,14 @@ public class InfluxDBWriter {
     private List<Point> getRigWorkerPoints(List<RigInfo> values) {
         return
                 values.stream().map(n -> Point.measurement(rigWorkerMetric + ".worker")
-                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                        .tag("crypto", n.crypto.toString().toLowerCase())
-                        .tag("host", n.rig)
-                        .tag("worker", n.worker)
-                        .addField("hashrate", n.totalHash)
-                        .addField("power", n.totalPower)
-                        .addField("efficiency", n.totalEff)
-                        .build()
+                               .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                               .tag("crypto", n.crypto.toString().toLowerCase())
+                               .tag("host", n.rig)
+                               .tag("worker", n.worker)
+                               .addField("hashrate", n.totalHash)
+                               .addField("power", n.totalPower)
+                               .addField("efficiency", n.totalEff)
+                               .build()
                 ).collect(Collectors.toList());
     }
     private List<Point> getRigGPUPoints(List<RigInfo> values) {
@@ -84,6 +87,7 @@ public class InfluxDBWriter {
                                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                                 .tag("crypto", rigInfo.crypto.toString().toLowerCase())
                                 .tag("host",   rigInfo.rig)
+                                .tag("worker", rigInfo.worker)
                                 .tag("gpu", gpu.id+"")
                                 .addField("hashrate", gpu.hashrate)
                                 .addField("power", gpu.power)
@@ -96,9 +100,26 @@ public class InfluxDBWriter {
     }
 
     public void writePoolInfo(List<PoolInfo> values) {
-//        influxDBTemplate.write(getRigWorkerPoints(values));
-//        influxDBTemplate.write(getRigGPUPoints(values));
+        influxDBTemplate.write(
+                values.stream().map(n -> Point.measurement(poolWorkerMetric)
+                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                        .tag("crypto", n.crypto.toString())
+                        .tag("pool", n.pool)
+                        .tag("worker", n.worker)
+                        .addField("hashrate", n.hashrate)
+                        .addField("average", n.average)
+                        .build()
+                ).collect(Collectors.toList()));
+        influxDBTemplate.write(
+                values.stream().map(n -> Point.measurement(balancePoolMetric)
+                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                        .tag("crypto", n.crypto.toString())
+                        .tag("pool", n.pool)
+                        .addField("confirmed", n.confirmed)
+                        .addField("unconfirmed", n.unconfirmed)
+                        .addField("total", n.confirmed + n.unconfirmed)
+                        .build()
+                ).collect(Collectors.toList()));
     }
-
 
 }

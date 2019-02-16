@@ -30,6 +30,9 @@ public class MQConfig {
     @Value("${amqp.key.rig:}")
     String rkey;
 
+    @Value("${amqp.key.pool:}")
+    String pkey;
+
     @Bean
     public NamingStrategy namingStrategy() {
         return () -> "mine." + UUID.randomUUID().toString();
@@ -94,6 +97,18 @@ public class MQConfig {
         return BindingBuilder.bind(autoDeleteQueueRigInfo)
                 .to(topic)
                 .with(rkey);
+    }
+
+    @Bean
+    public Queue autoDeleteQueuePoolInfo() {
+        return new AnonymousQueue();
+    }
+    @Bean
+    public Binding bindingPoolInfo(TopicExchange topic,
+                                   Queue autoDeleteQueuePoolInfo) {
+        return BindingBuilder.bind(autoDeleteQueuePoolInfo)
+                .to(topic)
+                .with(pkey);
     }
 
     @Bean
