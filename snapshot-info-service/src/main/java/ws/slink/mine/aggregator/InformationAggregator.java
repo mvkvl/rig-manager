@@ -13,6 +13,7 @@ import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import ws.slink.mine.model.BalanceData;
 import ws.slink.mine.model.Crypto;
 import ws.slink.mine.model.GPUData;
@@ -83,32 +84,55 @@ public class InformationAggregator {
 
     /* ------------- SCHEDULED TASKS ------------------- */
     @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
+    private void updateData() {
+        updateWorkersData();
+        updateGPUData();
+        updateBalanceData();
+    }
+//    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
     private void updateWorkersData() {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
         catch (InterruptedException e) {}
         // update data
+
+        StopWatch sw = null;
+        if (logger.isTraceEnabled()) {
+            sw = new StopWatch();
+            sw.start();
+        }
+
         List<WorkerData> aggregatedWorkerData = getWorkers();
-        periods.stream().forEach(p -> {
+        periods.parallelStream().forEach(p -> {
             String key = translateKey(p);
-            aggregatedWorkerData.stream().forEach(wd -> {
+            aggregatedWorkerData.parallelStream().forEach(wd -> {
                 wd.rigRate(key, getAverageWorkerHashrate("rig", "host", wd.rig, wd.worker, p));
                 wd.poolRate(key, getAverageWorkerHashrate("pool", "pool", wd.pool, wd.worker, p));
             });
         });
         data.put("worker", aggregatedWorkerData);
-        logger.trace("got worker data [{}]", new Object[]{data.get("worker").size()});
+
+        if (logger.isTraceEnabled()) {
+            sw.stop();
+            logger.trace("got worker data [{}] (in {} seconds)",
+                    new Object[]{data.get("worker").size(), sw.getTotalTimeSeconds()});
+        }
     }
-    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
+//    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
     private void updateGPUData() {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
         catch (InterruptedException e) {}
         // update data
+        StopWatch sw = null;
+        if (logger.isTraceEnabled()) {
+            sw = new StopWatch();
+            sw.start();
+        }
         List<GPUData> aggregatedGPUData = getGPUs();
-        periods.stream().forEach(p -> {
+        periods.parallelStream().forEach(p -> {
             String key = translateKey(p);
-            aggregatedGPUData.stream().forEach(gd -> {
+            aggregatedGPUData.parallelStream().forEach(gd -> {
                 GPUData ngd = getGPUData(gd.rig, gd.worker, gd.id + "", p);
                 gd.hashrate(key, ngd.hashrate(p));
                 gd.temperature(key, ngd.temperature(p));
@@ -116,19 +140,35 @@ public class InformationAggregator {
             });
         });
         data.put("gpu", aggregatedGPUData);
-        logger.trace("got GPU data [{}]", new Object[]{data.get("gpu").size()});
+        if (logger.isTraceEnabled()) {
+            sw.stop();
+            logger.trace("got GPU data [{}] (in {} seconds)",
+                          new Object[]{data.get("gpu").size(), sw.getTotalTimeSeconds()});
+        }
     }
-    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
+//    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
     private void updateBalanceData() {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
         catch (InterruptedException e) {}
+        StopWatch sw = null;
+        if (logger.isTraceEnabled()) {
+            sw = new StopWatch();
+            sw.start();
+        }
         List<WorkerData> wrk = (List<WorkerData>) data.get("worker");
         if (null != wrk) {
             data.put("balance", getBalances(wrk));
-            logger.trace("got balance data [{}]", new Object[]{data.get("balance").size()});
+            if (logger.isTraceEnabled()) {
+                sw.stop();
+                logger.trace("got balance data [{}] (in {} seconds)",
+                             new Object[]{data.get("balance").size(), sw.getTotalTimeSeconds()});
+            }
         } else {
-            logger.trace("no balance data");
+            if (logger.isTraceEnabled()) {
+                sw.stop();
+                logger.trace("no balance data");
+            }
         }
     }
 
