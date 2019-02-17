@@ -24,7 +24,7 @@ public class InfoServiceRunner implements CommandLineRunner {
 //    private FuturedUpdater futuredUpdater;
 
     @Override
-    public void run(String... arg0) throws InterruptedException {
+    public void run(String... arg0) {
         // in testing environment run application for
         // predefined period
         // in production set duration to 0 or totally remove from config

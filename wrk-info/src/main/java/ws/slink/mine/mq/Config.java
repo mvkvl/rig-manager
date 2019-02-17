@@ -1,19 +1,17 @@
 package ws.slink.mine.mq;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 
 //@Profile({"cloud"})
 @Configuration
@@ -44,6 +42,10 @@ public class Config {
             connectionFactory.setVirtualHost(url.getPath().replace("/", ""));
         connectionFactory.setConnectionTimeout(3000);
         connectionFactory.setRequestedHeartBeat(30);
+
+        // discouraged to do so here:
+        // https://docs.spring.io/spring-amqp/docs/2.1.4.RELEASE/reference/
+        connectionFactory.getRabbitConnectionFactory().setAutomaticRecoveryEnabled(true);
 
         return connectionFactory;
     }

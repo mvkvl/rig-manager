@@ -1,7 +1,8 @@
 package ws.slink.mine.mq;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.NamingStrategy;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

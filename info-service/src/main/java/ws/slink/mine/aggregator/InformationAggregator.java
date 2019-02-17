@@ -22,6 +22,7 @@ import ws.slink.mine.model.WorkerData;
 import ws.slink.mine.model.response.RigDataResponse;
 import ws.slink.mine.model.response.WorkerDataResponse;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -33,11 +34,7 @@ public class InformationAggregator {
 
     private static final Logger logger = LoggerFactory.getLogger(InformationAggregator.class);
 
-    private static final String QUERY_PERIOD = "5m";
-    List<String> periods = Arrays.asList(QUERY_PERIOD, "1d", "7d", "30d");
-
-    @Value("${schedule.timeout.maxdelay:15}")
-    private int maxDelay;
+    List<String> periods;
 
     @Autowired
     private InfluxDBReader influxDBReader;
@@ -45,11 +42,25 @@ public class InformationAggregator {
     @Autowired
     private InfluxDBTemplate<Point> influxDBTemplate;
 
+    @Value("${schedule.timeout.maxdelay:15}")
+    private int maxDelay;
+
     @Value("${spring.influxdb.database}")
     private String influxDatabaseName;
 
     @Value("${spring.influxdb.retention-policy}")
     private String influxRetentionPolicy;
+
+    @Value("${spring.influxdb.query.timeout.common:5m}")
+    private String commonQueryPeriod = null;
+
+    @Value("${spring.influxdb.query.timeout.wallet:30m}")
+    private String walletQueryPeriod = null;
+
+    @PostConstruct
+    private void initPeriods() {
+        periods = Arrays.asList(commonQueryPeriod, "1d", "7d", "30d");
+    }
 
     private Map<String, List<? extends Object>> data = new ConcurrentHashMap<>();
 
@@ -178,18 +189,20 @@ public class InformationAggregator {
 
     /* ------------------ TOOLS ------------------------ */
     private String translateKey(String input) {
-        switch(input) {
-            case QUERY_PERIOD: return "cur";
-            case "1d" :
-            case "1D" :
-            case "24h":
-            case "24H": return "1d";
-            case "7d" :
-            case "7D" : return "1w";
-            case "30d":
-            case "30D": return "1m";
-            default   : return input;
-        }
+        if (input.equalsIgnoreCase(commonQueryPeriod))
+            return "cur";
+        else
+            switch(input) {
+                case "1d" :
+                case "1D" :
+                case "24h":
+                case "24H": return "1d";
+                case "7d" :
+                case "7D" : return "1w";
+                case "30d":
+                case "30D": return "1m";
+                default   : return input;
+            }
     }
 
     /* --------------- WORKER DATA --------------------- */
@@ -244,7 +257,7 @@ public class InformationAggregator {
                 .QueryBuilder
                 .newQuery("SELECT last(\"hashrate\") as \"last_hashrate\" FROM " +
                         "\"" + influxRetentionPolicy + "\".\"" + msmt + ".worker\" " +
-                        "WHERE time > now() - " + QUERY_PERIOD +" AND " + src + " = $srcName AND worker = $worker")
+                        "WHERE time > now() - " + commonQueryPeriod +" AND " + src + " = $srcName AND worker = $worker")
                 .forDatabase(influxDatabaseName)
                 .bind("srcName", srcName)
                 .bind("worker", worker)
@@ -289,7 +302,7 @@ public class InformationAggregator {
         rigs.stream().forEach( r -> {
             workers.stream().forEach( w -> {
                 gpus.stream().forEach( g -> {
-                    if (getGPUData(r, w, g, QUERY_PERIOD).id >= 0) {
+                    if (getGPUData(r, w, g, commonQueryPeriod).id >= 0) {
                         result.add(r + "." + w + "." + g);
                     }});
             });
@@ -309,7 +322,6 @@ public class InformationAggregator {
                 .create();
         QueryResult results = influxDBTemplate.query(query);
         List<QueryResult.Series> sl = results.getResults().get(0).getSeries();
-
         GPUData result = new GPUData();
         if (null != sl) {
             result.id     = Integer.parseInt(gpu);
@@ -319,7 +331,6 @@ public class InformationAggregator {
             result.temperature.put(period, Double.parseDouble(sl.get(0).getValues().get(0).get(2).toString()));
             result.power.put(period, Double.parseDouble(sl.get(0).getValues().get(0).get(3).toString()));
         }
-
         return result;
     }
 
@@ -340,7 +351,7 @@ public class InformationAggregator {
                 .QueryBuilder
                 .newQuery("SELECT last(\"mining\") as \"lm\", last(\"holding\") as \"lh\" FROM " +
                         "\"" + influxRetentionPolicy + "\".\"balance.wallet\" " +
-                        "WHERE time > now() - 30m AND crypto = $crypto")
+                        "WHERE time > now() - " + walletQueryPeriod + " AND crypto = $crypto")
                 .forDatabase(influxDatabaseName)
                 .bind("crypto", crypto)
                 .create();
@@ -348,8 +359,6 @@ public class InformationAggregator {
         QueryResult results = influxDBTemplate.query(query);
 
         List<QueryResult.Series> sl = results.getResults().get(0).getSeries();
-
-//        System.out.println("   >>>>> " + results);
 
         if (null != sl) {
             result.add(
@@ -376,7 +385,7 @@ public class InformationAggregator {
                 .QueryBuilder
                 .newQuery("SELECT last(\"confirmed\") as \"cb\", last(\"unconfirmed\") as \"ub\" FROM " +
                         "\"" + influxRetentionPolicy + "\".\"balance.pool\" " +
-                        "WHERE time > now() - 5m AND crypto = $crypto AND pool = $pool")
+                        "WHERE time > now() - " + commonQueryPeriod + " AND crypto = $crypto AND pool = $pool")
                 .forDatabase(influxDatabaseName)
                 .bind("crypto", crypto)
                 .bind("pool", pool)
@@ -420,6 +429,27 @@ public class InformationAggregator {
         1d avg :        |
         7w avg :        |
         1m avg :        |
+        ----------------------------------------
+                         |||
+                         VVV
+                          V
+        WORKER INFO:
+        ----------------------------------------
+        worker_name_1
+                  cur  |  1d  |  1w  |  1m
+        rigA   :       |      |      |
+        rigB   :       |      |      |
+        rigC   :       |      |      |
+        poolD  :       |      |      |
+        poolE  :       |      |      |
+
+        worker_name_2
+                   cur |  1d  |  1w  |  1m
+        rigA   :       |      |      |
+        rigB   :       |      |      |
+        rigC   :       |      |      |
+        poolF  :       |      |      |
+        poolG  :       |      |      |
         ----------------------------------------
 
 

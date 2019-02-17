@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 import ws.slink.mine.blockchain.Crypto;
 import ws.slink.mine.tools.ConfigTools;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *

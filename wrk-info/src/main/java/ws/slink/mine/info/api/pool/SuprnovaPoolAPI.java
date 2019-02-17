@@ -61,7 +61,7 @@ public class SuprnovaPoolAPI implements PoolAPI {
             e.printStackTrace();
             throw new RuntimeException("JSON parse exception: " + jsonStr); }
 
-        List<String> keys = Arrays.asList(key.split("\\."));
+        String[] keys = key.split("\\.");
         FluentJson result = FluentJson.copy(fj);
         for(String k : keys)
             result = result.get(k);

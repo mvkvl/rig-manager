@@ -8,18 +8,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ws.slink.mine.blockchain.task.NetworkUpdateTask;
 import ws.slink.mine.blockchain.task.WalletUpdateTask;
-import ws.slink.mine.blockchain.task.FutureWalletUpdateTask;
 import ws.slink.mine.conf.ConfiguredBlockchains;
 import ws.slink.mine.conf.ConfiguredWallets;
-import ws.slink.mine.model.WalletInfo;
 
 import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
