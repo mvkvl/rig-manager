@@ -1,4 +1,4 @@
-package ws.slink.mine.model.response;
+package ws.slink.mine.controller.response;
 
 import org.apache.commons.lang3.StringUtils;
 import ws.slink.mine.model.GPUData;
@@ -6,7 +6,7 @@ import ws.slink.mine.model.GPUData;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RigDataResponse {
+public class DataResponseRig {
 
     private String rig;
     private Map<String, List<GPUData>> workers = new HashMap<>();
@@ -21,8 +21,8 @@ public class RigDataResponse {
                       .collect(Collectors.toList());
     }
 
-    public static RigDataResponse valueOf(GPUData gpuData) {
-        RigDataResponse rigData = new RigDataResponse();
+    public static DataResponseRig valueOf(GPUData gpuData) {
+        DataResponseRig rigData = new DataResponseRig();
         rigData.rig = gpuData.rig();
         rigData.workers.put(gpuData.worker(), new ArrayList(Arrays.asList(gpuData)));
         return rigData;

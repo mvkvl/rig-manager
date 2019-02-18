@@ -1,4 +1,4 @@
-package ws.slink.mine.model.response;
+package ws.slink.mine.controller.response;
 
 import org.apache.commons.lang3.StringUtils;
 import ws.slink.mine.model.WorkerData;
@@ -6,7 +6,7 @@ import ws.slink.mine.model.WorkerData;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class WorkerDataResponse {
+public class DataResponseWorker {
 
     private String worker;
     private Map<String, List<WorkerData>> rigs  = new HashMap<>();
@@ -28,8 +28,8 @@ public class WorkerDataResponse {
                     .collect(Collectors.toList());
     }
 
-    public static WorkerDataResponse valueOf(WorkerData data) {
-        WorkerDataResponse wdata = new WorkerDataResponse();
+    public static DataResponseWorker valueOf(WorkerData data) {
+        DataResponseWorker wdata = new DataResponseWorker();
         wdata.worker = data.worker();
         wdata.rigs.put(data.rig(), new ArrayList(Arrays.asList(data)));
         wdata.pools.put(data.pool(), new ArrayList(Arrays.asList(data)));

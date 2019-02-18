@@ -14,13 +14,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+import ws.slink.mine.controller.response.DataResponseBalance;
+import ws.slink.mine.controller.response.DataResponseRig;
+import ws.slink.mine.controller.response.DataResponseWorker;
 import ws.slink.mine.influxdb.InfluxDBReader;
 import ws.slink.mine.model.BalanceData;
 import ws.slink.mine.model.Crypto;
 import ws.slink.mine.model.GPUData;
 import ws.slink.mine.model.WorkerData;
-import ws.slink.mine.model.response.RigDataResponse;
-import ws.slink.mine.model.response.WorkerDataResponse;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -42,20 +43,20 @@ public class InformationAggregator {
     @Autowired
     private InfluxDBTemplate<Point> influxDBTemplate;
 
-    @Value("${schedule.timeout.maxdelay:15}")
-    private int maxDelay;
-
     @Value("${spring.influxdb.database}")
     private String influxDatabaseName;
 
     @Value("${spring.influxdb.retention-policy}")
     private String influxRetentionPolicy;
 
-    @Value("${spring.influxdb.query.timeout.common:5m}")
+    @Value("${spring.influxdb.query.time.common:5m}")
     private String commonQueryPeriod = null;
 
-    @Value("${spring.influxdb.query.timeout.wallet:30m}")
+    @Value("${spring.influxdb.query.time.wallet:30m}")
     private String walletQueryPeriod = null;
+
+    @Value("${schedule.timeout.maxdelay:15}")
+    private int maxDelay;
 
     @PostConstruct
     private void initPeriods() {
@@ -65,36 +66,44 @@ public class InformationAggregator {
     private Map<String, List<? extends Object>> data = new ConcurrentHashMap<>();
 
     /* ----------------- GETTERS ----------------------- */
-    public List<WorkerDataResponse> getWorkerData() {
+    public List<DataResponseWorker> getWorkerData() {
         List<WorkerData> workers = (List<WorkerData>) data.get("worker");
         if (null == workers) return Collections.EMPTY_LIST;
-        Map<String, WorkerDataResponse> result = new HashMap<>();
+        Map<String, DataResponseWorker> result = new HashMap<>();
         workers.stream().forEach(w -> {
-            WorkerDataResponse wdr = result.get(w.worker());
+            DataResponseWorker wdr = result.get(w.worker());
             if (null == wdr)
-                result.put(w.worker(), WorkerDataResponse.valueOf(w));
+                result.put(w.worker(), DataResponseWorker.valueOf(w));
             else
                 wdr.add(w);
         });
         return new ArrayList(result.values());
-//        return (null == result ) ? Collections.EMPTY_LIST : result ;
     }
-    public List<RigDataResponse> getGPUData() {
+    public List<DataResponseRig> getGPUData() {
         List<GPUData> gpus = (List<GPUData>) data.get("gpu");
         if (null == gpus ) return Collections.EMPTY_LIST;
-        Map<String, RigDataResponse> rigs = new HashMap<>();
+        Map<String, DataResponseRig> rigs = new HashMap<>();
         gpus.stream().forEach(g -> {
-            RigDataResponse rdr = rigs.get(g.rig());
+            DataResponseRig rdr = rigs.get(g.rig());
             if (null == rdr)
-                rigs.put(g.rig(), RigDataResponse.valueOf(g));
+                rigs.put(g.rig(), DataResponseRig.valueOf(g));
             else
                 rdr.add(g);
         });
         return new ArrayList(rigs.values());
     }
-    public List<BalanceData> getBalanceData() {
-        List<BalanceData> result = (List<BalanceData>) data.get("balance");
-        return (null == result ) ? Collections.EMPTY_LIST : result ;
+    public List<DataResponseBalance> getBalanceData() {
+        List<BalanceData> balances = (List<BalanceData>) data.get("balance");
+        if (null == balances) return Collections.EMPTY_LIST;
+        Map<String, DataResponseBalance> result = new HashMap<>();
+        balances.stream().forEach(b -> {
+            String key = b.crypto.toString() + "." + b.source;
+            if (result.containsKey(key))
+                result.get(key).add(b);
+            else
+                result.put(key, DataResponseBalance.valueOf(b));
+        });
+        return new ArrayList(result.values());
     }
 
     /* ------------- SCHEDULED TASKS ------------------- */

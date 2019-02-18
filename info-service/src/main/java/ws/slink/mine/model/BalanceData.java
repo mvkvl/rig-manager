@@ -23,7 +23,6 @@ public class BalanceData {
         this.amount = value;
         return this;
     }
-
     public String toString() {
         return crypto + "." + source + "." + type + ": " + amount;
     }

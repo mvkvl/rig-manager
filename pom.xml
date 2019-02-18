@@ -28,6 +28,7 @@
       <module>wrk-info</module>
       <module>db-updater</module>
       <module>info-service</module>
+        <module>telebot</module>
     </modules>
 
 </project>

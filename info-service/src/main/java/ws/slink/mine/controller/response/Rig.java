@@ -1,4 +1,4 @@
-package ws.slink.mine.model.response;
+package ws.slink.mine.controller.response;
 
 import ws.slink.mine.model.WorkerData;
 

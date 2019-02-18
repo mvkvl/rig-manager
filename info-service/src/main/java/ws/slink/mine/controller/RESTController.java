@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ws.slink.mine.aggregator.InformationAggregator;
-import ws.slink.mine.model.BalanceData;
-import ws.slink.mine.model.response.RigDataResponse;
-import ws.slink.mine.model.response.WorkerDataResponse;
+import ws.slink.mine.controller.response.DataResponseBalance;
+import ws.slink.mine.controller.response.DataResponseRig;
+import ws.slink.mine.controller.response.DataResponseWorker;
 
 import java.util.List;
 
@@ -20,15 +20,15 @@ public class RESTController {
     private InformationAggregator aggregator;
 
     @GetMapping(path="/worker", produces = "application/json")
-    public @ResponseBody List<WorkerDataResponse> getWorkerData() {
+    public @ResponseBody List<DataResponseWorker> getWorkerData() {
         return aggregator.getWorkerData();
     }
     @GetMapping(path="/gpu", produces = "application/json")
-    public @ResponseBody List<RigDataResponse> getGPUData() {
+    public @ResponseBody List<DataResponseRig> getGPUData() {
         return aggregator.getGPUData();
     }
     @GetMapping(path="/balance", produces = "application/json")
-    public @ResponseBody List<BalanceData> getBalanceData() {
+    public @ResponseBody List<DataResponseBalance> getBalanceData() {
         return aggregator.getBalanceData();
     }
 
