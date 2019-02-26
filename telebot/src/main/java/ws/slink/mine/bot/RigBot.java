@@ -82,9 +82,7 @@ public class RigBot extends TelegramLongPollingBot {
         if (null != baMessage)
             try {
                 execute(baMessage); // Sending our message object to user
-//                logger.info("Sent message \"{}\" to {}", response.getText(), response.getChatId());
             } catch (TelegramApiException e) {
-//                logger.error("Failed to send message \"{}\" to {} due to error: {}", response.getText(), response.getChatId(), e.getMessage());
                 e.printStackTrace();
             }
 
