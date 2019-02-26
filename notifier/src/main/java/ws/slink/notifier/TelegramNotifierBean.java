@@ -25,12 +25,7 @@ public class TelegramNotifierBean {
                     proxyUrl);
     }
     public void sendMessage(String message) {
-        if (StringUtils.isNotBlank(apiToken) && StringUtils.isNotBlank(chatId))
-            TelegramNotifier.instance().sendMessage(apiToken,
-                    chatId,
-                    message,
-                    icon,
-                    proxyUrl);
+        sendMessage(message, icon);
     }
 
 
