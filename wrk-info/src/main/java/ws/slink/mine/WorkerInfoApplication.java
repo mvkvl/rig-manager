@@ -15,9 +15,8 @@ public class WorkerInfoApplication implements ApplicationListener<ContextClosedE
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerInfoApplication.class);
 
-//    @Profile("!usage_message")
     @Bean
-    public CommandLineRunner blockChainInfo() {
+    public CommandLineRunner applicationRunner() {
         return new WorkerInfoRunner();
     }
 
@@ -27,7 +26,7 @@ public class WorkerInfoApplication implements ApplicationListener<ContextClosedE
     }
 
     public static void main(String[] args) {
-        logger.info("starting rig/worker info service");
+        logger.info("starting up rig/worker info service");
         SpringApplication.run(WorkerInfoApplication.class, args);
     }
 

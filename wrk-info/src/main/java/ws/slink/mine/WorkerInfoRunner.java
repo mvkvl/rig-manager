@@ -24,7 +24,6 @@ public class WorkerInfoRunner implements CommandLineRunner {
     @Override
     public void run(String... arg0) throws InterruptedException {
 
-//        System.out.println(String.format(" >>> ICON: 0x%08X", icon));
         telegramNotifier.sendMessage(" <b>wrk-info</b>: service started");
 
         // in testing environment run application for

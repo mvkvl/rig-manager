@@ -31,7 +31,6 @@ public class MinerInfoLoader {
      * @return list of miners' configuration to query mine details later
      */
     public List<MinerInfo> get() {
-//        System.out.println(" >>> " + minerInfoUrls);
         return minerInfoUrls.parallelStream()
                             .map(this::getMinersInfo)
                             .flatMap(List::stream)
@@ -56,9 +55,6 @@ public class MinerInfoLoader {
 
         String jsonStr = restTemplate.build().getForObject(urlStr, String.class);
 
-//        if (logger.isTraceEnabled())
-//            logger.trace("Miner WS: {}", jsonStr.trim());
-
         FluentJson fj;
         try {
             fj = new FluentJson(new JSONParser().parse(jsonStr));
@@ -67,8 +63,7 @@ public class MinerInfoLoader {
             throw new RuntimeException("JSON parse exception: " + jsonStr);
         }
 
-        List<MinerInfo> result =
-            fj.stream()
+        return fj.stream()
               .map(v -> new MinerInfo()
                                     .crypto(Crypto.valueOf(v.getString("crypto").toUpperCase()))
                                     .pool(v.getString("pool"))
@@ -79,13 +74,6 @@ public class MinerInfoLoader {
                                     .port(v.getString("apiport"))
              ).filter(v -> v.configured())
               .collect(Collectors.toList());
-
-//        if (logger.isTraceEnabled()) {
-//            logger.trace("Miners Info: ");
-//            result.stream().forEach(v -> logger.trace(v.toString()));
-//        }
-
-        return result;
     }
 
 }

@@ -20,11 +20,6 @@ public class Config {
     @Value("${amqp.url:}")
     String uri;
 
-//    @Bean
-//    public NamingStrategy namingStrategy() {
-//        return () -> "mine.worker" + UUID.randomUUID().toString();
-//    }
-
     @Bean
     public ConnectionFactory connectionFactory() {
         URI url = null;
