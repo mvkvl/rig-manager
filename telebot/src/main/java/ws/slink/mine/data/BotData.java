@@ -34,8 +34,9 @@ public class BotData {
                 .forEach(v -> sb.append("")
                                 .append(String.format(formatStr,
                                         v.get("crypto").toString().toLowerCase(),
-                                        Double.parseDouble(v.get("holding").toString()),
-                                        Double.parseDouble(v.get("mining").toString()))));
+                                        String.format("%,f", Double.parseDouble(v.get("holding").toString())).replace(",", " "),
+                                        String.format("%,f", Double.parseDouble(v.get("mining").toString())).replace(",", " ")
+                                )));
         sb.append("pools:\n");
         List<String> pools = new ArrayList<>(
                 balances.stream()

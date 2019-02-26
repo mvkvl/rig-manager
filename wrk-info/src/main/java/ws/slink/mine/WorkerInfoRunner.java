@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
+import ws.slink.notifier.TelegramNotifierBean;
 
 public class WorkerInfoRunner implements CommandLineRunner {
 
@@ -15,15 +16,17 @@ public class WorkerInfoRunner implements CommandLineRunner {
     private int duration;
 
     @Autowired
-    private ConfigurableApplicationContext ctx;
+    private TelegramNotifierBean telegramNotifier;
 
-//    @Autowired
-//    private Updater updater;
-//    @Autowired
-//    private FuturedUpdater futuredUpdater;
+    @Autowired
+    private ConfigurableApplicationContext ctx;
 
     @Override
     public void run(String... arg0) throws InterruptedException {
+
+//        System.out.println(String.format(" >>> ICON: 0x%08X", icon));
+        telegramNotifier.sendMessage(" <b>wrk-info</b>: service started");
+
         // in testing environment run application for
         // predefined period
         // in production set duration to 0 or totally remove from config

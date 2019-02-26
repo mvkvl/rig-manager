@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 import ws.slink.mine.blockchain.FuturedUpdater;
 import ws.slink.mine.blockchain.Updater;
+import ws.slink.notifier.TelegramNotifierBean;
 
 public class BlockchainInfoRunner implements CommandLineRunner {
 
@@ -25,11 +26,15 @@ public class BlockchainInfoRunner implements CommandLineRunner {
     @Autowired
     private FuturedUpdater futuredUpdater;
 
+    @Autowired
+    private TelegramNotifierBean telegramNotifier;
+
     @Override
     public void run(String... arg0) {
-//        updater.run();
-        futuredUpdater.run();
+        telegramNotifier.sendMessage("<b>bc-info</b>: service started");
 
+        //        updater.run();
+        futuredUpdater.run();
 // run application for "duration" ms
 //        logger.trace("running BCI app for " + duration + "ms");
 //        Thread.sleep(duration);

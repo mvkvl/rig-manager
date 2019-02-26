@@ -42,6 +42,8 @@ public class Updater {
             logger.trace("rig update attempt");
             if (null != minerInfoList && !minerInfoList.isEmpty())
                 rigUpdater.update(minerInfoList);
+            else
+                logger.trace("empty input data");
         } catch (Exception ex) {
             logger.error("Exception processing rig information: " + ex.getMessage());
 //            ex.printStackTrace();
@@ -54,6 +56,8 @@ public class Updater {
             logger.trace("pool update attempt");
             if (null != minerInfoList && !minerInfoList.isEmpty())
                 poolUpdater.update(minerInfoList);
+            else
+                logger.trace("empty input data");
         } catch (Exception ex) {
             logger.error("Exception processing pool information: " + ex.getMessage());
 //            ex.printStackTrace();

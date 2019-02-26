@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import ws.slink.mine.model.Crypto;
 
 /**
- *  Value-class for storing miner configuration information
+ *  Value-class for storing mine configuration information
  */
 public class MinerInfo {
     public Crypto   crypto;

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextClosedEvent;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages={"ws.slink"})
 public class InfoServiceApplication implements ApplicationListener<ContextClosedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(InfoServiceApplication.class);

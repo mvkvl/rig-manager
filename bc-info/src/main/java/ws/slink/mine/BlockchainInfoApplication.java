@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextClosedEvent;
 
 
-@SpringBootApplication
-//@EnableScheduling
+@SpringBootApplication(scanBasePackages={"ws.slink"})
 public class BlockchainInfoApplication implements ApplicationListener<ContextClosedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(BlockchainInfoApplication.class);

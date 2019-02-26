@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>ws.slink.mine</groupId>
+            <artifactId>notifier</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.xabgesagtx</groupId>
             <artifactId>telegram-spring-boot-starter</artifactId>
             <version>${telegram-spring-boot-starter.version}</version>

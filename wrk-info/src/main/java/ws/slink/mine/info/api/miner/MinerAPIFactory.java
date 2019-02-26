@@ -18,7 +18,7 @@ public class MinerAPIFactory {
             case TREX: return trexMinerAPIProvider.getObject();
 //            case ZENEMY: return new ZenemyMinerAPI();
             default:
-                throw new RuntimeException("unsupported miner: " + miner);
+                throw new RuntimeException("unsupported mine: " + miner);
         }
     }
 

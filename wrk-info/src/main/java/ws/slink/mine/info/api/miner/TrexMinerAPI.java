@@ -68,7 +68,7 @@ public class TrexMinerAPI implements MinerAPI {
         "algorithm": "x16r",
         "api": "3.0",
         "cuda": "9.10",
-        "description": "T-Rex NVIDIA GPU miner",
+        "description": "T-Rex NVIDIA GPU mine",
         "difficulty": 53724.55074240396,
         "gpu_total": 10,
         "gpus": [
