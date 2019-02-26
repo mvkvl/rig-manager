@@ -74,7 +74,7 @@ public class IpMonitor {
         }
     }
 
-    @Scheduled(fixedRate = 86400000)
+    @Scheduled(fixedRate = 86400000) // once a day
     private void cleanHostKeys() {
         logger.trace("cleaning up host keys");
         hostKeyService.clear();

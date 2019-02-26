@@ -38,10 +38,7 @@ public class FutureNetworkUpdater implements Runnable {
                     .map(CompletableFuture::supplyAsync)
                     .collect(Collectors.toList());
             List<NetworkInfo> info = FutureTools.all(futures);
-//            System.out.println("Network Info:");
-//            info.stream().forEach(System.out::println);
             sender.send(amqpNetworkKey, info);
-//            System.out.println("----------------------------------");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

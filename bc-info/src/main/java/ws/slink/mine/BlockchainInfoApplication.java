@@ -15,9 +15,8 @@ public class BlockchainInfoApplication implements ApplicationListener<ContextClo
 
     private static final Logger logger = LoggerFactory.getLogger(BlockchainInfoApplication.class);
 
-//    @Profile("!usage_message")
     @Bean
-    public CommandLineRunner blockChainInfo() {
+    public CommandLineRunner applicationRunner() {
         return new BlockchainInfoRunner();
     }
 

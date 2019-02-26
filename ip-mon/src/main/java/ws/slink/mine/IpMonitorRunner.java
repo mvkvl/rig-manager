@@ -22,9 +22,9 @@ public class IpMonitorRunner implements CommandLineRunner {
     public void run(String... arg0) {
         notificationService.notify(" <b>ip-mon</b>: service started");
 
-        // in testing environment run application for
-        // predefined period
-        // in production set duration to 0 or totally remove from config
+//         in testing environment run application for
+//         predefined period
+//         in production set duration to 0 or totally remove from config
 //        if (duration > 0) {
 //            Thread.sleep(duration);
 //            ctx.close();

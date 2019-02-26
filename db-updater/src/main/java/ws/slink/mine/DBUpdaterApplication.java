@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.event.ContextClosedEvent;
 
 
@@ -16,19 +15,18 @@ public class DBUpdaterApplication implements ApplicationListener<ContextClosedEv
 
     private static final Logger logger = LoggerFactory.getLogger(DBUpdaterApplication.class);
 
-//    @Profile("!usage_message")
     @Bean
-    public CommandLineRunner blockChainInfo() {
+    public CommandLineRunner applicationRunner() {
         return new DBUpdaterRunner();
     }
 
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
-        logger.info("shutting down block chain info service");
+        logger.info("shutting down database updater service");
     }
 
     public static void main(String[] args) {
-        logger.info("starting block chain info service");
+        logger.info("starting database updater service");
         SpringApplication.run(DBUpdaterApplication.class, args);
     }
 

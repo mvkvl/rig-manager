@@ -15,9 +15,8 @@ public class InfoServiceApplication implements ApplicationListener<ContextClosed
 
     private static final Logger logger = LoggerFactory.getLogger(InfoServiceApplication.class);
 
-//    @Profile("!usage_message")
     @Bean
-    public CommandLineRunner runner() {
+    public CommandLineRunner applicationRunner() {
         return new InfoServiceRunner();
     }
 

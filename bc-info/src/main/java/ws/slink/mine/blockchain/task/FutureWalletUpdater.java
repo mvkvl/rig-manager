@@ -38,10 +38,7 @@ public class FutureWalletUpdater implements Runnable {
                     .map(CompletableFuture::supplyAsync)
                     .collect(Collectors.toList());
             List<WalletInfo> info = FutureTools.all(futures);
-//            System.out.println("Wallet Info:");
-//            info.stream().forEach(System.out::println);
             sender.send(amqpWalletKey, info);
-//            System.out.println("----------------------------------");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

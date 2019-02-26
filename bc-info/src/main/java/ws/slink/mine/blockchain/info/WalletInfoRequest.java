@@ -45,7 +45,6 @@ public class WalletInfoRequest {
     public Optional<WalletInfo> balance(Crypto crypto, String walletKey) {
         WalletConfig wc = new WalletConfig(config, crypto);
         String url = wc.url(config.get(getWalletKey(crypto, walletKey)));
-//        logger.trace("URL: " + url);
 
         ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.GET, RequestTools.getEntity(), String.class);
         logger.trace("RESPONSE: [" + res.getStatusCode() + "]:  " + res.getBody());

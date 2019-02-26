@@ -33,7 +33,6 @@ public class BlockchainInfoRunner implements CommandLineRunner {
     public void run(String... arg0) {
         telegramNotifier.sendMessage("<b>bc-info</b>: service started");
 
-        //        updater.run();
         futuredUpdater.run();
 // run application for "duration" ms
 //        logger.trace("running BCI app for " + duration + "ms");

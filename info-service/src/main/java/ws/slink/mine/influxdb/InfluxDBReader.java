@@ -16,9 +16,6 @@ import java.util.stream.Collectors;
 @EnableScheduling
 public class InfluxDBReader {
 
-//    private static final int MAX_QUERY_ATTEMPTS = 10;
-//    private static final int WAIT_TIME_BASE_SEC = 2;
-
     @Autowired
     private InfluxDBTemplate<Point> influxDBTemplate;
 
@@ -35,6 +32,14 @@ public class InfluxDBReader {
         QueryResult res = influxDBTemplate.query(query);
         return res.getResults().get(0).getSeries().get(0).getValues().stream().map(l -> l.get(1).toString()).collect(Collectors.toList());
     }
+
+}
+
+
+
+
+
+
 
 //    public QueryResult getPoint(Query query) {
 //        QueryResult results = null;
@@ -72,7 +77,3 @@ public class InfluxDBReader {
 ////        aggregator.getBalanceData().stream().forEach(System.out::println);
 //        System.out.println(" # records: " + aggregator.getBalanceData().size());
 //    }
-
-
-
-}

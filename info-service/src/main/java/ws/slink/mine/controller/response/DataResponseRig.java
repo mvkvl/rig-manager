@@ -29,7 +29,6 @@ public class DataResponseRig {
     }
 
     public boolean add(GPUData gpuData) {
-//        System.out.println(" >>>>> RIG: " + gpuData.rig() + "; WORKER: " + gpuData.worker());
         if (StringUtils.isBlank(gpuData.rig) || !gpuData.rig().equals(this.rig))
             return false;
         if (null != workers.get(gpuData.worker()))

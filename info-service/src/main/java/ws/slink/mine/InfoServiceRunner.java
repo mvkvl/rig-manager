@@ -16,7 +16,6 @@ public class InfoServiceRunner implements CommandLineRunner {
     @Override
     public void run(String... arg0) {
         telegramNotifier.sendMessage(" <b>info-service</b>: service started");
-
 //        if (duration > 0) {
 //            Thread.sleep(duration);
 //            ctx.close();

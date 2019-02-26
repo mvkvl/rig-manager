@@ -107,12 +107,6 @@ public class InformationAggregator {
     }
 
     /* ------------- SCHEDULED TASKS ------------------- */
-//    @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
-//    private void updateData() {
-//        updateWorkersData();
-////        updateGPUData();
-//        updateBalanceData();
-//    }
     @Scheduled(fixedDelayString = "${schedule.timeout.agg}")
     private void updateWorkersData() {
         // random delay
@@ -364,7 +358,6 @@ public class InformationAggregator {
                 .forDatabase(influxDatabaseName)
                 .bind("crypto", crypto)
                 .create();
-//        QueryResult results = influxDBReader.getPoint(query); //influxDBTemplate.query(query);
         QueryResult results = influxDBTemplate.query(query);
 
         List<QueryResult.Series> sl = results.getResults().get(0).getSeries();
@@ -425,13 +418,13 @@ public class InformationAggregator {
 /*
         WORKER INFO:
         ----------------------------------------
-        worker_name_1                                 // 1. подтянуть список активных worker'ов
-                  rigXa | rigXb | rigXc | poolY1      // 2. для каждого worker'a подтянуть
-        current:        |       |       |             //    список активных rig'ов и pool'ов
-        1d avg :        |       |       |             // 3.
-        1w avg :        |       |       |             //
-        1m avg :        |       |       |             //
-                                                      //
+        worker_name_1
+                  rigXa | rigXb | rigXc | poolY1
+        current:        |       |       |
+        1d avg :        |       |       |
+        1w avg :        |       |       |
+        1m avg :        |       |       |
+
         worker_name_2
                   rigX1 | poolY2
         current:        |
@@ -464,25 +457,26 @@ public class InformationAggregator {
 
 
         GPU INFO (hashrate / power / temperature):
-        ----------------------------------------      // 1. подтянуть список rig'ов
-        rig_name_1                                    // 2. для каждого rig'а подтянуть
-                 cur  |  1d  |  1w  |  1m             //    список GPU
-        GPU 0         |      |      |                 // 3. для каждого GPU подтянуть
-        GPU 1         |      |      |                 //    а) текущее значение
-        ...                                           //    б) значение AVG 1
-        GPU X         |      |      |                 //    в) значение AVG 2
-        ----------------------------------------      //    г) значение AVG 3
+        ----------------------------------------
+        rig_name_1
+                 cur  |  1d  |  1w  |  1m
+        GPU 0         |      |      |
+        GPU 1         |      |      |
+        ...
+        GPU X         |      |      |
+        ----------------------------------------
         Total (pwr):
 
 
 
         BALANCE:
         ----------------------------------------
-        Wallet:                                       // 1.
+        Wallet:
               RVN:    xxxxx [   yyyy]
               ZEC:   xxxxxx [     yy]
               ZEN:     xxxx [    yyy]
         Pool:
            pool_name:                  // <- for active workers only !
               RVN:       xx [     yy]
-        ----------------------------------------                        */
+        ----------------------------------------
+*/

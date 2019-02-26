@@ -18,7 +18,6 @@ public class Sender {
     @Autowired
     private TopicExchange topic;
 
-//    @Scheduled(fixedDelay = 1000, initialDelay = 500)
     public void send(String key, Object object) {
         template.convertAndSend(topic.getName(), key, object);
         try {

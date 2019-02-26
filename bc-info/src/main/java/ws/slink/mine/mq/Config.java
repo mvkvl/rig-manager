@@ -15,7 +15,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
-//@Profile({"cloud"})
 @Configuration
 public class Config {
 
