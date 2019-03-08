@@ -1,4 +1,4 @@
-package ws.slink.mine.data;
+package ws.slink.mine.commands;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,7 @@ public class BotData {
     @Autowired
     private RestTemplateBuilder restTemplate;
 
-    @Value("${data.url}")
+    @Value("${service.info}")
     private String infoServiceURLStr;
 
     private final String separator_str = "-------------------------------";

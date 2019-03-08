@@ -34,8 +34,8 @@ public class SuprnovaPoolAPI implements PoolAPI {
     public PoolInfo get(MinerInfo minerInfo) {
         logger.trace("SuprnovaPoolAPI.get(" + minerInfo + ")");
 
-        FluentJson balanceJson = getJson(getServiceData(BALANCE_URL, minerInfo.crypto), "getuserbalance.data");
-        FluentJson workersJson = getJson(getServiceData(WORKER_URL , minerInfo.crypto), "getuserworkers.data");
+        FluentJson balanceJson = getJson(getServiceData(BALANCE_URL, minerInfo.crypto), "getuserbalance.commands");
+        FluentJson workersJson = getJson(getServiceData(WORKER_URL , minerInfo.crypto), "getuserworkers.commands");
 
         double workerHashrate =
             workersJson.stream()

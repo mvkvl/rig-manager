@@ -112,7 +112,7 @@ public class InformationAggregator {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
         catch (InterruptedException e) {}
-        // update data
+        // update commands
 
         StopWatch sw = null;
         if (logger.isTraceEnabled()) {
@@ -132,7 +132,7 @@ public class InformationAggregator {
 
         if (logger.isTraceEnabled()) {
             sw.stop();
-            logger.trace("got worker data [{}] (in {} seconds)",
+            logger.trace("got worker commands [{}] (in {} seconds)",
                     new Object[]{data.get("worker").size(), sw.getTotalTimeSeconds()});
         }
     }
@@ -141,7 +141,7 @@ public class InformationAggregator {
         // random delay
         try {Thread.sleep(ThreadLocalRandom.current().nextInt(maxDelay) * 1000);}
         catch (InterruptedException e) {}
-        // update data
+        // update commands
         StopWatch sw = null;
         if (logger.isTraceEnabled()) {
             sw = new StopWatch();
@@ -160,7 +160,7 @@ public class InformationAggregator {
         data.put("gpu", aggregatedGPUData);
         if (logger.isTraceEnabled()) {
             sw.stop();
-            logger.trace("got GPU data [{}] (in {} seconds)",
+            logger.trace("got GPU commands [{}] (in {} seconds)",
                           new Object[]{data.get("gpu").size(), sw.getTotalTimeSeconds()});
         }
     }
@@ -179,13 +179,13 @@ public class InformationAggregator {
             data.put("balance", getBalances(wrk));
             if (logger.isTraceEnabled()) {
                 sw.stop();
-                logger.trace("got balance data [{}] (in {} seconds)",
+                logger.trace("got balance commands [{}] (in {} seconds)",
                              new Object[]{data.get("balance").size(), sw.getTotalTimeSeconds()});
             }
         } else {
             if (logger.isTraceEnabled()) {
                 sw.stop();
-                logger.trace("no balance data");
+                logger.trace("no balance commands");
             }
         }
     }

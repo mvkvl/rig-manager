@@ -33,6 +33,8 @@
         <module>ip-mon</module>
         <module>ip-mon-client</module>
         <module>price-info</module>
+        <module>mgmt-service</module>
+        <module>wrk-mgr</module>
     </modules>
 
 </project>

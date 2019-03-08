@@ -59,7 +59,6 @@ public class WalletUpdateTask implements Runnable {
             logger.error("update error for [" + crypto + ", " + wallet + "]: " + ex.getMessage());
         }
 
-        // TODO: send message to AMQP server
         balance.ifPresent(v -> {
             logger.trace("[" + v + "]");
             sender.send(amqpKey, v);

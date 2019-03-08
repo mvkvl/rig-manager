@@ -2,14 +2,13 @@ package ws.slink.mine.message;
 
 import java.util.Map;
 
-public class RigMessage {
+public class RigCommand {
 
     private String      command;
     private Map<String, String> arguments;
 
-    public RigMessage() {}
-
-    public RigMessage(String command, Map<String, String> arguments) {
+    public RigCommand() {}
+    public RigCommand(String command, Map<String, String> arguments) {
         this.command   = command;
         this.arguments = arguments;
     }
@@ -24,5 +23,4 @@ public class RigMessage {
     public String toString() {
         return "Rig Command: " + this.command + "; " + this.arguments;
     }
-
 }

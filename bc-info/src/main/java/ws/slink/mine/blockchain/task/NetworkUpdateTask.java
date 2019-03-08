@@ -57,7 +57,6 @@ public class NetworkUpdateTask implements Runnable {
             logger.error("update error for [" + crypto + "]: " + ex.getMessage());
         }
 
-        // TODO: send message to AMQP server
         info.ifPresent(v -> {
             logger.trace("[" + v + "]");
             sender.send(amqpKey, v);

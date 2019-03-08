@@ -8,9 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 import ws.slink.notifier.TelegramNotifierBean;
 
-public class DBUpdaterRunner implements CommandLineRunner {
+public class WorkerManagerRunner implements CommandLineRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(DBUpdaterRunner.class);
+    private static final Logger logger = LoggerFactory.getLogger(WorkerManagerRunner.class);
 
     @Value("${test.duration:0}")
     private int duration;
@@ -23,7 +23,7 @@ public class DBUpdaterRunner implements CommandLineRunner {
 
     @Override
     public void run(String... arg0) throws InterruptedException {
-        telegramNotifier.sendMessage(" <b>db-updater</b>: service started");
+        telegramNotifier.sendMessage(" <b>wrk-mgr</b>: service started");
 
         if (duration > 0) {
             Thread.sleep(duration);

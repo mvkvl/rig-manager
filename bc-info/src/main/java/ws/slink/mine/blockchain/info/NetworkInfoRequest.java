@@ -57,13 +57,12 @@ public class NetworkInfoRequest {
                         )
                 );
             } catch (ParseException e) {
-                logger.error("Error parsing service response in NetworkInfoRequest.balance()");
+                logger.error("Error parsing service response in NetworkInfoRequest.get()");
                 return Optional.empty();
             }
         } else {
-            logger.error("Service request failed in NetworkInfoRequest.balance()");
+            logger.error("Service request failed in NetworkInfoRequest.get()");
             return Optional.empty();
         }
     }
-
 }

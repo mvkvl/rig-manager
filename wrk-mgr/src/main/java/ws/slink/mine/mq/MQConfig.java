@@ -20,17 +20,8 @@ public class MQConfig {
     @Value("${amqp.url:}")
     String uri;
 
-    @Value("${amqp.key.wallet:}")
-    String wkey;
-
-    @Value("${amqp.key.network:}")
-    String nkey;
-
     @Value("${amqp.key.rig:}")
     String rkey;
-
-    @Value("${amqp.key.pool:}")
-    String pkey;
 
     @Bean
     public NamingStrategy namingStrategy() {
@@ -61,53 +52,17 @@ public class MQConfig {
     @Bean
     public TopicExchange topic() { return new TopicExchange("mine.topic"); }
 
+
     @Bean
-    public Queue autoDeleteQueueWallet() {
+    public Queue autoDeleteQueueRigCommand() {
         return new AnonymousQueue();
     }
     @Bean
-    public Binding bindingWallet(TopicExchange topic,
-                                 Queue autoDeleteQueueWallet) {
-        return BindingBuilder.bind(autoDeleteQueueWallet)
-                .to(topic)
-                .with(wkey);
-    }
-
-
-    @Bean
-    public Queue autoDeleteQueueNetwork() {
-        return new AnonymousQueue();
-    }
-    @Bean
-    public Binding bindingNetwork(TopicExchange topic,
-                                  Queue autoDeleteQueueNetwork) {
-        return BindingBuilder.bind(autoDeleteQueueNetwork)
-                .to(topic)
-                .with(nkey);
-    }
-
-    @Bean
-    public Queue autoDeleteQueueRigInfo() {
-        return new AnonymousQueue();
-    }
-    @Bean
-    public Binding bindingRigInfo(TopicExchange topic,
+    public Binding bindingRigCommand(TopicExchange topic,
                                   Queue autoDeleteQueueRigInfo) {
         return BindingBuilder.bind(autoDeleteQueueRigInfo)
                 .to(topic)
                 .with(rkey);
-    }
-
-    @Bean
-    public Queue autoDeleteQueuePoolInfo() {
-        return new AnonymousQueue();
-    }
-    @Bean
-    public Binding bindingPoolInfo(TopicExchange topic,
-                                   Queue autoDeleteQueuePoolInfo) {
-        return BindingBuilder.bind(autoDeleteQueuePoolInfo)
-                .to(topic)
-                .with(pkey);
     }
 
     @Bean

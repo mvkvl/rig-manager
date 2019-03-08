@@ -3,7 +3,8 @@ package ws.slink.mine.bot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import ws.slink.mine.data.BotData;
+import ws.slink.mine.commands.BotData;
+import ws.slink.mine.commands.RigManagerCommand;
 import ws.slink.telegram.menu.*;
 
 public class RigBotMenu extends AbstractBotMenu {
@@ -12,6 +13,9 @@ public class RigBotMenu extends AbstractBotMenu {
 
     @Autowired
     private BotData botData;
+
+    @Autowired
+    private RigManagerCommand rigManagerCommand;
 
     public RigBotMenu(String botTitle) {
         super(botTitle);
@@ -42,11 +46,36 @@ public class RigBotMenu extends AbstractBotMenu {
         menu.add(new BackDialogCommand("sub_menu_rig_back"));
         return menu;
     }
+    private TreeNode monitoringMenu() {
+        TreeNode menu = new DialogItem(" Monitor ", "monitoring_menu_main");
+        menu.add(rigMenu());
+        menu.add(workerMenu());
+        menu.add(balanceMenu());
+        menu.add(new ClearDialogCommand("monitoring_menu_main_reset"));
+        menu.add(new BackDialogCommand("monitoring_menu_main_back"));
+        return menu;
+    }
+
+    private TreeNode managementMenu() {
+        TreeNode menu = new DialogItem(" Manage ", "management_menu_main");
+
+        menu.add(new DialogCommand(" Start ",
+                "management_menu_start_mining",
+                (chat, message) -> rigManagerCommand.start(null)));
+
+        menu.add(new DialogCommand(" Stop ",
+                "management_menu_stop_mining",
+                (chat, message) -> rigManagerCommand.stop(null)));
+
+
+        menu.add(new ClearDialogCommand("management_menu_main_reset"));
+        menu.add(new BackDialogCommand("management_menu_main_back"));
+        return menu;
+    }
 
     @Override protected void build() {
-        getRoot().add(rigMenu());
-        getRoot().add(workerMenu());
-        getRoot().add(balanceMenu());
+        getRoot().add(monitoringMenu());
+        getRoot().add(managementMenu());
         getRoot().add(new ClearDialogCommand("main_menu_reset"));
     }
 }

@@ -11,23 +11,23 @@ import org.springframework.context.event.ContextClosedEvent;
 
 
 @SpringBootApplication(scanBasePackages={"ws.slink"})
-public class BlockchainInfoApplication implements ApplicationListener<ContextClosedEvent> {
+public class ManagementServiceApplication implements ApplicationListener<ContextClosedEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(BlockchainInfoApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(ManagementServiceApplication.class);
 
     @Bean
     public CommandLineRunner applicationRunner() {
-        return new BlockchainInfoRunner();
+        return new ManagementServiceRunner();
     }
 
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
-        logger.info("shutting down block chain info service");
+        logger.info("shutting down management service");
     }
 
     public static void main(String[] args) {
-        logger.info("starting block chain info service");
-        SpringApplication.run(BlockchainInfoApplication.class, args);
+        logger.info("starting up management service");
+        SpringApplication.run(ManagementServiceApplication.class, args);
     }
 
 }
