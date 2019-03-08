@@ -20,7 +20,7 @@ public class TeleBotApplication {
     }
 
     @Bean public BotMenu getBotMenu() {
-        return new RigBotMenu("infobot");
+        return new RigBotMenu("mine");
     }
 
     @Bean public CommandLineRunner applicationRunner() {

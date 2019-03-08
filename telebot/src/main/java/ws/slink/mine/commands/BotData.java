@@ -25,18 +25,29 @@ public class BotData {
 
     public String getBalanceData() {
         List<Map> balances = getJsonData("balance");
-        String formatStr = "  %5s:%11.2f [%8.2f]\n";
+
+        String formatStr = "  %5s:%11s [%8s]\n";
         StringBuilder sb = new StringBuilder();
         sb.append("<pre>").append("Balances:\n").append(separator_str).append("\nwallets:\n");
         balances.stream()
                 .filter(j -> j.get("source").toString().equalsIgnoreCase("wallet"))
                 .sorted((a, b) -> a.get("crypto").toString().compareTo(b.get("crypto").toString()))
-                .forEach(v -> sb.append("")
-                                .append(String.format(formatStr,
-                                        v.get("crypto").toString().toLowerCase(),
-                                        String.format("%,f", Double.parseDouble(v.get("holding").toString())).replace(",", " "),
-                                        String.format("%,f", Double.parseDouble(v.get("mining").toString())).replace(",", " ")
-                                )));
+                .forEach(v -> {
+                    double h = Double.parseDouble(v.get("holding").toString());
+                    double m = Double.parseDouble(v.get("mining").toString());
+                    sb.append(
+                    String.format(formatStr,
+                            v.get("crypto").toString().toLowerCase(),
+                            String.format((h > 99.0) ? "%,.0f" : "%,.2f", h),
+                            String.format((m > 99.0) ? "%,.0f" : "%,.2f", m)
+                    ));
+//                    sb.append("")
+//                                .append(String.format(formatStr,
+//                                        v.get("crypto").toString().toLowerCase(),
+//                                        String.format("%,f", Double.parseDouble(v.get("holding").toString())).replace(",", " "),
+//                                        String.format("%,f", Double.parseDouble(v.get("mining").toString())).replace(",", " ")
+//                                ));
+                });
         sb.append("pools:\n");
         List<String> pools = new ArrayList<>(
                 balances.stream()
@@ -48,11 +59,14 @@ public class BotData {
                     .filter(b -> b.get("source").toString().equalsIgnoreCase(p))
                     .sorted((a, b) -> a.get("crypto").toString().compareTo(b.get("crypto").toString()))
                     .forEach(b -> {
+                        double c = Double.parseDouble(b.get("confirmed").toString());
+                        double u = Double.parseDouble(b.get("unconfirmed").toString());
                         sb.append("")
                           .append(String.format(formatStr,
                                   b.get("crypto").toString().toLowerCase(),
-                                  Double.parseDouble(b.get("confirmed").toString()),
-                                  Double.parseDouble(b.get("unconfirmed").toString())));
+                                  String.format((c > 99.0) ? "%,.0f" : "%,.2f", c),
+                                  String.format((u > 99.0) ? "%,.0f" : "%,.2f", u)
+                                  ));
             });
         });
         sb.append(separator_str).append("</pre>");
