@@ -64,8 +64,8 @@ public class MinermorePoolAPI implements PoolAPI {
                 .worker(minerInfo.worker)
                 .hashrate(workerHashrate / 1000000.0)
                 .average(averageWorkerHashrate / 1000000.0)
-                .confirmed(Double.parseDouble(balanceJson.getString("immature")))
-                .unconfirmed(Double.parseDouble(balanceJson.getString("balance")));
+                .confirmed(Double.parseDouble(balanceJson.getString("mature")))
+                .unconfirmed(Double.parseDouble(balanceJson.getString("immature")));
     }
 
     private FluentJson getJson(String jsonStr, String key) {
