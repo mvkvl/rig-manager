@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import ws.slink.mine.info.conf.MinerInfo;
 import ws.slink.mine.info.model.PoolInfo;
-import ws.slink.mine.model.Crypto;
 import ws.slink.mine.tools.FluentJson;
 
 public class MinermorePoolAPI implements PoolAPI {
@@ -18,14 +17,13 @@ public class MinermorePoolAPI implements PoolAPI {
     private final String BALANCE_URL = "https://minermore.com/api/wallet?address=%WALLET%";
     private final String WORKER_URL  = "https://minermore.com/api/workers?wallet=%WALLET%";
 
-    //    private final String STATUS_URL  = "https://%CRYPTO%.suprnova.cc/index.php?page=api&action=getuserstatus&api_key=%KEY%";
-//    private final String BALANCE_URL = "https://%CRYPTO%.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=%KEY%";
-//    private final String WORKER_URL  = "https://%CRYPTO%.suprnova.cc/index.php?page=api&action=getuserworkers&api_key=%KEY%";
-
     private static final Logger logger = LoggerFactory.getLogger(MinermorePoolAPI.class);
 
-    @Value("${api.pool.key.minermore}")
-    private String apiKey;
+    @Value("${api.pool.key.minermore.balance}")
+    private String apiBalanceKey;
+
+    @Value("${api.pool.key.minermore.worker}")
+    private String apiWorkerKey;
 
     @Autowired
     private RestTemplateBuilder restTemplate;
@@ -33,12 +31,11 @@ public class MinermorePoolAPI implements PoolAPI {
     @Override
     public PoolInfo get(MinerInfo minerInfo) {
         logger.trace("MinermorePoolAPI.get(" + minerInfo + ")");
-//
+
         logger.trace(minerInfo.crypto.toString().toUpperCase());
 
-        FluentJson balanceJson = getJson(getServiceData(BALANCE_URL, minerInfo.crypto), minerInfo.crypto.toString().toUpperCase());
-        FluentJson workersJson = getJson(getServiceData(WORKER_URL , minerInfo.crypto), "workers");
-//
+        FluentJson balanceJson = getJson(getServiceData(BALANCE_URL, apiBalanceKey), minerInfo.crypto.toString().toUpperCase());
+        FluentJson workersJson = getJson(getServiceData(WORKER_URL , apiWorkerKey), "workers");
 
         logger.trace(balanceJson.toString());
         logger.trace(workersJson.toString());
@@ -84,8 +81,8 @@ public class MinermorePoolAPI implements PoolAPI {
         return result;
     }
 
-    private String getServiceData(String url, Crypto crypto) {
-        String urlStr  = url.replace("%WALLET%", apiKey);
+    private String getServiceData(String url, String key) {
+        String urlStr  = url.replace("%WALLET%", key);
         String jsonStr = restTemplate.build().getForObject(urlStr, String.class);
         return jsonStr;
     }
