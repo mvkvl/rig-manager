@@ -60,7 +60,7 @@ public class Updater {
                 logger.trace("empty input commands");
         } catch (Exception ex) {
             logger.error("Exception processing pool information: " + ex.getMessage());
-//            ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 

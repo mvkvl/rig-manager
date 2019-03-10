@@ -7,16 +7,19 @@ import ws.slink.mine.model.Pool;
 @Component
 public class PoolAPIFactory {
 
-    private ObjectProvider<SuprnovaPoolAPI > suprnovaPoolAPIProvider;
+    private ObjectProvider<SuprnovaPoolAPI> suprnovaPoolAPIProvider;
+    private ObjectProvider<MinermorePoolAPI> minermorePoolAPIProvider;
 
-    public PoolAPIFactory(ObjectProvider<SuprnovaPoolAPI> suprnovaPoolAPIProvider) {
+    public PoolAPIFactory(ObjectProvider<SuprnovaPoolAPI> suprnovaPoolAPIProvider,
+                          ObjectProvider<MinermorePoolAPI> minermorePoolAPIProvider) {
         this.suprnovaPoolAPIProvider = suprnovaPoolAPIProvider;
+        this.minermorePoolAPIProvider = minermorePoolAPIProvider;
     }
 
     public PoolAPI get(Pool pool) {
         switch(pool) {
-            case SUPRNOVA: return suprnovaPoolAPIProvider.getObject();
-//            case ZENEMY: return new ZenemyMinerAPI();
+            case SUPRNOVA:  return suprnovaPoolAPIProvider.getObject();
+            case MINERMORE: return minermorePoolAPIProvider.getObject();
             default:
                 throw new RuntimeException("unsupported pool: " + pool);
         }

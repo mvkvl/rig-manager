@@ -39,6 +39,9 @@ public class PoolUpdater {
                 minerInfoList.parallelStream()
                         .map(this::getPoolData)
                         .collect(Collectors.toList());
+        if (logger.isTraceEnabled())
+            poolData.stream().forEach(v -> logger.trace(v.toString()));
+
         sender.send(amqpPoolInfoKey, poolData);
     }
 

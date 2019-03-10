@@ -1,7 +1,8 @@
 package ws.slink.mine.model;
 
 public enum Pool {
-    SUPRNOVA("suprnova"); //,
+    SUPRNOVA("suprnova"),
+    MINERMORE("minermore");
 
     private String value;
     Pool(String value) {

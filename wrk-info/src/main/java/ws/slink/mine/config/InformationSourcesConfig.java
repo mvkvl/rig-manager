@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import ws.slink.mine.info.api.miner.TrexMinerAPI;
+import ws.slink.mine.info.api.pool.MinermorePoolAPI;
 import ws.slink.mine.info.api.pool.SuprnovaPoolAPI;
 
 @Configuration
@@ -20,5 +21,9 @@ public class InformationSourcesConfig {
     public SuprnovaPoolAPI createSuprnovaPoolAPI() {
         return new SuprnovaPoolAPI();
     }
+
+    @Bean
+    @Scope("prototype")
+    public MinermorePoolAPI createMinermorePoolAPI() { return new MinermorePoolAPI(); }
 
 }

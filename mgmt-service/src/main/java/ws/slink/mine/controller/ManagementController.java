@@ -22,7 +22,7 @@ public class ManagementController {
     public @ResponseBody String stopMiners() {
         logger.trace("stop miner");
         rigManager.stop();
-        return "stop command sent to all workers";
+        return "stop command sent to workers";
     }
 
     @PostMapping(path="/stop/{miner}", produces = "application/json")
@@ -36,7 +36,7 @@ public class ManagementController {
     public @ResponseBody String startMiners() {
         logger.trace("start miner");
         rigManager.start();
-        return "start command sent to all workers";
+        return "start command sent to workers";
     }
 
     @PostMapping(path="/start/{miner}", produces = "application/json")
