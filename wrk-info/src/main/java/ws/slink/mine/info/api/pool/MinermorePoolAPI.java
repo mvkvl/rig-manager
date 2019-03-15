@@ -61,7 +61,7 @@ public class MinermorePoolAPI implements PoolAPI {
                 .worker(minerInfo.worker)
                 .hashrate(workerHashrate / 1000000.0)
                 .average(averageWorkerHashrate / 1000000.0)
-                .confirmed(Double.parseDouble(balanceJson.getString("mature") + balanceJson.getString("balance")))
+                .confirmed(Double.parseDouble(balanceJson.getString("mature")) + Double.parseDouble(balanceJson.getString("balance")))
                 .unconfirmed(Double.parseDouble(balanceJson.getString("immature")));
     }
 
