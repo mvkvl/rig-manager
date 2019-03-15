@@ -21,10 +21,11 @@ public class PriceInfoRunner implements CommandLineRunner {
     @Autowired
     private TelegramNotifierBean telegramNotifier;
 
+
     @Override
     public void run(String... arg0) throws InterruptedException {
 
-        telegramNotifier.sendMessage(" <b>price-info</b>: service started");
+        // telegramNotifier.sendMessage(" <b>price-info</b>: service started");
 
         // in testing environment run application for
         // predefined period

@@ -32,6 +32,9 @@ public class MQConfig {
     @Value("${amqp.key.pool:}")
     String pkey;
 
+    @Value("${amqp.key.price:}")
+    String pricekey;
+
     @Bean
     public NamingStrategy namingStrategy() {
         return () -> "mine." + UUID.randomUUID().toString();
@@ -109,6 +112,19 @@ public class MQConfig {
                 .to(topic)
                 .with(pkey);
     }
+
+    @Bean
+    public Queue autoDeleteQueuePriceInfo() {
+        return new AnonymousQueue();
+    }
+    @Bean
+    public Binding bindingPriceInfo(TopicExchange topic,
+                                    Queue autoDeleteQueuePriceInfo) {
+        return BindingBuilder.bind(autoDeleteQueuePriceInfo)
+                .to(topic)
+                .with(pricekey);
+    }
+
 
     @Bean
     public MessageConverter jsonMessageConverter() {

@@ -1,22 +1,24 @@
 package ws.slink.mine.influxdb;
 
 import org.influxdb.dto.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.stereotype.Component;
-import ws.slink.mine.model.NetworkInfo;
-import ws.slink.mine.model.PoolInfo;
-import ws.slink.mine.model.RigInfo;
-import ws.slink.mine.model.WalletInfo;
+import ws.slink.mine.model.*;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
 public class InfluxDBWriter {
+
+    private static final Logger logger = LoggerFactory.getLogger(InfluxDBWriter.class);
 
     @Autowired
     private InfluxDBTemplate<Point> influxDBTemplate;
@@ -35,6 +37,9 @@ public class InfluxDBWriter {
 
     @Value("${influxdb.metric.pool:pool.worker.default}")
     private String poolWorkerMetric;
+
+    @Value("${influxdb.metric.price:price.default}")
+    private String priceMetric;
 
     @PostConstruct
     public void init() {
@@ -120,6 +125,23 @@ public class InfluxDBWriter {
                         .addField("total", n.confirmed + n.unconfirmed)
                         .build()
                 ).collect(Collectors.toList()));
+    }
+
+    public void writePriceInfo(List<PriceInfo> values) {
+        List<Point> points = new ArrayList<>();
+        values.stream()
+              .forEach( v -> v.getPrices()
+                              .entrySet()
+                              .stream()
+                              .forEach( p ->
+                                 points.add(
+                                   Point.measurement(priceMetric)
+                                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                                        .tag("crypto", v.getCrypto().toString().toLowerCase())
+                                        .addField(p.getKey().toLowerCase(), p.getValue())
+                                        .build())));
+        logger.trace("Points: {}", points);
+        influxDBTemplate.write(points);
     }
 
 }
