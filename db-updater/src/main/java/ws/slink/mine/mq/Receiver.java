@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import ws.slink.mine.influxdb.InfluxDBWriter;
-import ws.slink.mine.model.NetworkInfo;
-import ws.slink.mine.model.PoolInfo;
-import ws.slink.mine.model.RigInfo;
-import ws.slink.mine.model.WalletInfo;
+import ws.slink.mine.model.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +42,13 @@ public class Receiver {
     public void receivePoolInfo(PoolInfo[] in) {
         List<PoolInfo> info = Arrays.asList(in);
         writer.writePoolInfo(info);
+        receive(info);
+    }
+
+    @RabbitListener(queues = "#{autoDeleteQueuePriceInfo.name}")
+    public void receivePriceInfo(PriceInfo[] in) {
+        List<PriceInfo> info = Arrays.asList(in);
+        writer.writePriceInfo(info);
         receive(info);
     }
 
