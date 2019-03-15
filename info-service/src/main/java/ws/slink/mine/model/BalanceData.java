@@ -1,5 +1,7 @@
 package ws.slink.mine.model;
 
+import ws.slink.mine.type.Crypto;
+
 public class BalanceData {
 
     public Crypto crypto; //

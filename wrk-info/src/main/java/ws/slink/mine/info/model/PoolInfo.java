@@ -1,6 +1,6 @@
 package ws.slink.mine.info.model;
 
-import ws.slink.mine.model.Crypto;
+import ws.slink.mine.type.Crypto;
 
 /**
  * Blockchain network information query result

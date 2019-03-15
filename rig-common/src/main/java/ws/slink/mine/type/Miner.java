@@ -1,11 +1,11 @@
-package ws.slink.mine.model;
+package ws.slink.mine.type;
 
-public enum Pool {
-    SUPRNOVA("suprnova"),
-    MINERMORE("minermore");
+public enum Miner {
+    TREX("trex"),
+    ZENEMY("zenemy");
 
     private String value;
-    Pool(String value) {
+    Miner(String value) {
         this.value = value;
     }
     public String toString() {

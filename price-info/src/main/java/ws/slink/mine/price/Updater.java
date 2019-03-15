@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ws.slink.mine.config.ConfiguredPrices;
 import ws.slink.mine.model.PriceInfo;
 import ws.slink.mine.mq.Sender;
+import ws.slink.mine.tools.FutureTools;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;

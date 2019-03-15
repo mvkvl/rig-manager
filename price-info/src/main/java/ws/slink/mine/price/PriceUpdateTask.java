@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import ws.slink.mine.model.Crypto;
+import ws.slink.mine.type.Crypto;
 import ws.slink.mine.model.PriceInfo;
 
 import java.util.Optional;

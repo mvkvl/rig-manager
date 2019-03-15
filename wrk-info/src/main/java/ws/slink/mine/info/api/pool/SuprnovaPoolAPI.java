@@ -7,13 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import ws.slink.mine.info.conf.MinerInfo;
+import ws.slink.mine.info.model.MinerInfo;
 import ws.slink.mine.info.model.PoolInfo;
-import ws.slink.mine.model.Crypto;
 import ws.slink.mine.tools.FluentJson;
-
-import java.util.Arrays;
-import java.util.List;
+import ws.slink.mine.type.Crypto;
 
 public class SuprnovaPoolAPI implements PoolAPI {
 

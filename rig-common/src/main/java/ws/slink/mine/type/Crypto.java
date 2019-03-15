@@ -1,4 +1,4 @@
-package ws.slink.mine.model;
+package ws.slink.mine.type;
 
 public enum Crypto {
     RVN("rvn"),

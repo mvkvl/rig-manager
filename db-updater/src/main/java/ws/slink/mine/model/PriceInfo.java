@@ -2,6 +2,7 @@ package ws.slink.mine.model;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ws.slink.mine.type.Crypto;
 
 import java.io.IOException;
 import java.util.HashMap;

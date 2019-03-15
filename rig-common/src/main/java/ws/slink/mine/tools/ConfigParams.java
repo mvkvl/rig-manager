@@ -1,4 +1,4 @@
-package ws.slink.mine.config;
+package ws.slink.mine.tools;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

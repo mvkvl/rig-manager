@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import ws.slink.mine.model.Crypto;
+import ws.slink.mine.type.Crypto;
+import ws.slink.mine.tools.ConfigTools;
 
 import java.util.*;
 

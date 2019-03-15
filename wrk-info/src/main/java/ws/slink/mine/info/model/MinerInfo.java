@@ -1,13 +1,13 @@
-package ws.slink.mine.info.conf;
+package ws.slink.mine.info.model;
 
 import org.apache.commons.lang3.StringUtils;
-import ws.slink.mine.model.Crypto;
+import ws.slink.mine.type.Crypto;
 
 /**
  *  Value-class for storing mine configuration information
  */
 public class MinerInfo {
-    public Crypto   crypto;
+    public Crypto crypto;
     public String     pool;
     public String   worker;
     public String      rig;

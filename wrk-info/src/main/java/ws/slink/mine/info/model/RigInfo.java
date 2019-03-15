@@ -1,6 +1,6 @@
 package ws.slink.mine.info.model;
 
-import ws.slink.mine.model.Crypto;
+import ws.slink.mine.type.Crypto;
 
 import java.util.List;
 import java.util.stream.Collectors;

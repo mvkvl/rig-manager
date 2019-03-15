@@ -3,9 +3,9 @@ package ws.slink.mine.blockchain.config;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ws.slink.mine.blockchain.Crypto;
-import ws.slink.mine.conf.ConfigParams;
 import ws.slink.mine.error.WalletAPIConfigurationError;
+import ws.slink.mine.tools.ConfigParams;
+import ws.slink.mine.type.Crypto;
 
 /**
  *

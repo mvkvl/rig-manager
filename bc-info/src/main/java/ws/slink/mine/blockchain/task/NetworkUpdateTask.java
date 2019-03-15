@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import ws.slink.mine.blockchain.Crypto;
 import ws.slink.mine.blockchain.info.NetworkInfoRequest;
 import ws.slink.mine.model.NetworkInfo;
 import ws.slink.mine.mq.Sender;
+import ws.slink.mine.type.Crypto;
 
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import ws.slink.mine.info.conf.MinerInfo;
+import ws.slink.mine.info.model.MinerInfo;
 import ws.slink.mine.info.model.GPUInfo;
 import ws.slink.mine.info.model.RigInfo;
 import ws.slink.mine.tools.FluentJson;

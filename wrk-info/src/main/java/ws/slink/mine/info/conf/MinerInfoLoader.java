@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
-import ws.slink.mine.model.Crypto;
+import ws.slink.mine.info.model.MinerInfo;
 import ws.slink.mine.tools.FluentJson;
+import ws.slink.mine.type.Crypto;
 
 import java.net.MalformedURLException;
 import java.net.URL;

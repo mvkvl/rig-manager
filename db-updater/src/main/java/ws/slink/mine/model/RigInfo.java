@@ -1,10 +1,12 @@
 package ws.slink.mine.model;
 
+import ws.slink.mine.type.Crypto;
+
 import java.util.List;
 
 public class RigInfo {
 
-    public Crypto      crypto;
+    public Crypto crypto;
     public String        pool;
     public String      worker;
     public String         rig;
