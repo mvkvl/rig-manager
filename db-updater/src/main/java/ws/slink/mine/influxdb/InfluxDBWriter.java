@@ -23,23 +23,26 @@ public class InfluxDBWriter {
     @Autowired
     private InfluxDBTemplate<Point> influxDBTemplate;
 
-    @Value("${influxdb.metric.balance.pool:balance.pool.default}")
+    @Value("${influxdb.metric.balance.pool}")
     private String balancePoolMetric;
 
-    @Value("${influxdb.metric.balance.wallet:balance.wallet.default}")
+    @Value("${influxdb.metric.balance.wallet}")
     private String balanceWalletMetric;
 
-    @Value("${influxdb.metric.blockchain:blockchain.network.default}")
+    @Value("${influxdb.metric.blockchain}")
     private String blockchainMetric;
 
-    @Value("${influxdb.metric.rig:rig.default}")
+    @Value("${influxdb.metric.rig}")
     private String rigWorkerMetric;
 
-    @Value("${influxdb.metric.pool:pool.worker.default}")
+    @Value("${influxdb.metric.pool}")
     private String poolWorkerMetric;
 
-    @Value("${influxdb.metric.price:price.default}")
+    @Value("${influxdb.metric.price}")
     private String priceMetric;
+
+    @Value("${influxdb.metric.mq}")
+    private String messageQueueMetric;
 
     @PostConstruct
     public void init() {
@@ -54,8 +57,8 @@ public class InfluxDBWriter {
                                           .addField(w.wallet, w.amount)
                                           .build()
             ).collect(Collectors.toList()));
+        writeMQMessage("wallet.info");
     }
-
     public void writeNetworkInfo(List<NetworkInfo> values) {
         influxDBTemplate.write(
             values.stream().map(n -> Point.measurement(blockchainMetric)
@@ -65,11 +68,12 @@ public class InfluxDBWriter {
                                           .addField("nethash", n.hashrate)
                                           .build()
             ).collect(Collectors.toList()));
+        writeMQMessage("network.info");
     }
-
     public void writeRigInfo(List<RigInfo> values) {
         influxDBTemplate.write(getRigWorkerPoints(values));
         influxDBTemplate.write(getRigGPUPoints(values));
+        writeMQMessage("rig.info");
     }
     private List<Point> getRigWorkerPoints(List<RigInfo> values) {
         return
@@ -103,7 +107,6 @@ public class InfluxDBWriter {
         ).flatMap(List::stream)
          .collect(Collectors.toList());
     }
-
     public void writePoolInfo(List<PoolInfo> values) {
         influxDBTemplate.write(
                 values.stream().map(n -> Point.measurement(poolWorkerMetric)
@@ -125,8 +128,8 @@ public class InfluxDBWriter {
                         .addField("total", n.confirmed + n.unconfirmed)
                         .build()
                 ).collect(Collectors.toList()));
+        writeMQMessage("pool.info");
     }
-
     public void writePriceInfo(List<PriceInfo> values) {
         List<Point> points = new ArrayList<>();
         values.stream()
@@ -142,6 +145,21 @@ public class InfluxDBWriter {
                                         .build())));
         logger.trace("Points: {}", points);
         influxDBTemplate.write(points);
+        writeMQMessage("price.info");
+    }
+
+    private void writeMQMessage(String queueName) {
+        Point p1 = Point.measurement(messageQueueMetric)
+                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                        .tag("queue", queueName)
+                        .addField("value", 1)
+                        .build();
+        Point p2 = Point.measurement(messageQueueMetric)
+                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                        .tag("queue", "all")
+                        .addField("value", 1)
+                        .build();
+        influxDBTemplate.write(p1, p2);
     }
 
 }
