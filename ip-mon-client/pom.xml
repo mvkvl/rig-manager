@@ -18,6 +18,11 @@
         </dependency>
         <dependency>
             <groupId>ws.slink.mine</groupId>
+            <artifactId>rig-common</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>ws.slink.mine</groupId>
             <artifactId>notifier</artifactId>
             <version>0.1</version>
         </dependency>

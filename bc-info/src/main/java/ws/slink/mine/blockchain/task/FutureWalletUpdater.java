@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import ws.slink.mine.model.WalletInfo;
+import ws.slink.mine.info.WalletInfo;
 import ws.slink.mine.mq.Sender;
 import ws.slink.mine.tools.FutureTools;
 

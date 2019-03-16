@@ -1,4 +1,4 @@
-package ws.slink.mine.info.model;
+package ws.slink.mine.info;
 
 /**
  *

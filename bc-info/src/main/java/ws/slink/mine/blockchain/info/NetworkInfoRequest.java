@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ws.slink.mine.blockchain.config.NetworkConfig;
-import ws.slink.mine.model.NetworkInfo;
+import ws.slink.mine.info.NetworkInfo;
 import ws.slink.mine.tools.ConfigParams;
 import ws.slink.mine.tools.FluentJson;
 import ws.slink.mine.tools.RequestTools;

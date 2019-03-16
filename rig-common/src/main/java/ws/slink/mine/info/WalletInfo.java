@@ -1,8 +1,6 @@
-package ws.slink.mine.model;
+package ws.slink.mine.info;
 
 import ws.slink.mine.type.Crypto;
-
-import java.util.Date;
 
 /**
  *
@@ -13,21 +11,17 @@ public class WalletInfo {
     public Crypto crypto;
     public String wallet;
     public double amount;
-    public Date receivedAt;
 
-    public WalletInfo() {
-        this.receivedAt = new Date();
-    }
+    public WalletInfo() {}
 
     public WalletInfo(Crypto crypto, String wallet, double amount) {
         this.crypto     = crypto;
         this.wallet     = wallet;
         this.amount     = amount;
-        this.receivedAt = new Date();
     }
 
     public String toString() {
-        return "c: " + crypto + "; w: " + wallet + "; a: " + amount + "; dt: " + receivedAt;
+        return "c: " + crypto + "; w: " + wallet + "; a: " + amount;
     }
 
 }

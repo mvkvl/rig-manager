@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import ws.slink.mine.info.api.pool.PoolAPI;
 import ws.slink.mine.info.api.pool.PoolAPIFactory;
 import ws.slink.mine.info.model.MinerInfo;
-import ws.slink.mine.info.model.PoolInfo;
 import ws.slink.mine.mq.Sender;
 import ws.slink.mine.type.Pool;
 

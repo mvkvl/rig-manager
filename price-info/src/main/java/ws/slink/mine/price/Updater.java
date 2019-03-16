@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ws.slink.mine.config.ConfiguredPrices;
-import ws.slink.mine.model.PriceInfo;
+import ws.slink.mine.info.PriceInfo;
 import ws.slink.mine.mq.Sender;
 import ws.slink.mine.tools.FutureTools;
 

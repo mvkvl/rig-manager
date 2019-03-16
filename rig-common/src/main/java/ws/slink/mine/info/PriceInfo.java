@@ -1,4 +1,4 @@
-package ws.slink.mine.model;
+package ws.slink.mine.info;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

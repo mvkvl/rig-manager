@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import ws.slink.mine.influxdb.InfluxDBWriter;
-import ws.slink.mine.model.*;
+import ws.slink.mine.info.*;
 
 import java.util.Arrays;
 import java.util.List;
