@@ -13,11 +13,11 @@ import org.springframework.context.event.ContextClosedEvent;
 @SpringBootApplication(scanBasePackages={"ws.slink"})
 public class PriceInfoApplication implements ApplicationListener<ContextClosedEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(PriceInfoApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestApplication.class);
 
     @Bean
     public CommandLineRunner applicationRunner() {
-        return new PriceInfoRunner();
+        return new TestRunner();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class PriceInfoApplication implements ApplicationListener<ContextClosedEv
 
     public static void main(String[] args) {
         logger.info("starting up price info service");
-        SpringApplication.run(PriceInfoApplication.class, args);
+        SpringApplication.run(TestApplication.class, args);
     }
 
 }

@@ -8,7 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ConfigurableApplicationContext;
 import ws.slink.mine.blockchain.FuturedUpdater;
 import ws.slink.mine.blockchain.Updater;
-import ws.slink.mine.conf.ConfiguredPrices;
 import ws.slink.notifier.TelegramNotifierBean;
 
 public class BlockchainInfoRunner implements CommandLineRunner {
@@ -30,8 +29,8 @@ public class BlockchainInfoRunner implements CommandLineRunner {
     @Autowired
     private TelegramNotifierBean telegramNotifier;
 
-    @Autowired
-    private ConfiguredPrices configuredPrices;
+//    @Autowired
+//    private ConfiguredPrices configuredPrices;
 
     @Override
     public void run(String... arg0) {

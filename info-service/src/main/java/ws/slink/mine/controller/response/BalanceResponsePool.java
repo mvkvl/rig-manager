@@ -1,7 +1,7 @@
 package ws.slink.mine.controller.response;
 
 import ws.slink.mine.model.BalanceData;
-import ws.slink.mine.model.Crypto;
+import ws.slink.mine.type.Crypto;
 
 public class BalanceResponsePool implements DataResponseBalance {
 

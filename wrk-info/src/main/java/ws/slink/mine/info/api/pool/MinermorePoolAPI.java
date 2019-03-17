@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import ws.slink.mine.info.conf.MinerInfo;
-import ws.slink.mine.info.model.PoolInfo;
+import ws.slink.mine.info.PoolInfo;
+import ws.slink.mine.info.model.MinerInfo;
 import ws.slink.mine.tools.FluentJson;
 
 public class MinermorePoolAPI implements PoolAPI {

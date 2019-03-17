@@ -19,9 +19,9 @@ import ws.slink.mine.controller.response.DataResponseRig;
 import ws.slink.mine.controller.response.DataResponseWorker;
 import ws.slink.mine.influxdb.InfluxDBReader;
 import ws.slink.mine.model.BalanceData;
-import ws.slink.mine.model.Crypto;
 import ws.slink.mine.model.GPUData;
 import ws.slink.mine.model.WorkerData;
+import ws.slink.mine.type.Crypto;
 
 import javax.annotation.PostConstruct;
 import java.util.*;

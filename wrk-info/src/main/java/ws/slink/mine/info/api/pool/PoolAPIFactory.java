@@ -2,7 +2,7 @@ package ws.slink.mine.info.api.pool;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
-import ws.slink.mine.model.Pool;
+import ws.slink.mine.type.Pool;
 
 @Component
 public class PoolAPIFactory {

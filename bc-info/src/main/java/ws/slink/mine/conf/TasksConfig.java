@@ -3,8 +3,8 @@ package ws.slink.mine.conf;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import ws.slink.mine.blockchain.Crypto;
 import ws.slink.mine.blockchain.task.*;
+import ws.slink.mine.type.Crypto;
 
 import java.util.List;
 

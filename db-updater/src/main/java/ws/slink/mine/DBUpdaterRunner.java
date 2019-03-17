@@ -24,7 +24,6 @@ public class DBUpdaterRunner implements CommandLineRunner {
     @Override
     public void run(String... arg0) throws InterruptedException {
         telegramNotifier.sendMessage(" <b>db-updater</b>: service started");
-
         if (duration > 0) {
             Thread.sleep(duration);
             ctx.close();

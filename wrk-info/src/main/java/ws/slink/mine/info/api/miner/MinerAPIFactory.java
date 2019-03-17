@@ -2,7 +2,7 @@ package ws.slink.mine.info.api.miner;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
-import ws.slink.mine.model.Miner;
+import ws.slink.mine.type.Miner;
 
 @Component
 public class MinerAPIFactory {

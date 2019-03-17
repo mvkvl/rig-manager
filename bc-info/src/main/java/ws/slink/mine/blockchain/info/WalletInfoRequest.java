@@ -9,12 +9,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import ws.slink.mine.blockchain.Crypto;
 import ws.slink.mine.blockchain.config.WalletConfig;
-import ws.slink.mine.conf.ConfigParams;
-import ws.slink.mine.model.WalletInfo;
+import ws.slink.mine.info.WalletInfo;
+import ws.slink.mine.tools.ConfigParams;
 import ws.slink.mine.tools.FluentJson;
 import ws.slink.mine.tools.RequestTools;
+import ws.slink.mine.type.Crypto;
 
 import java.util.Optional;
 

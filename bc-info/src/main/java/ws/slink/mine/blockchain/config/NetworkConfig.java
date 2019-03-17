@@ -1,7 +1,7 @@
 package ws.slink.mine.blockchain.config;
 
-import ws.slink.mine.blockchain.Crypto;
-import ws.slink.mine.conf.ConfigParams;
+import ws.slink.mine.tools.ConfigParams;
+import ws.slink.mine.type.Crypto;
 
 /**
  *

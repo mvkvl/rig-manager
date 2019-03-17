@@ -25,16 +25,17 @@
 
     <modules>
       <module>notifier</module>
+      <module>rig-common</module>
       <module>bc-info</module>
       <module>wrk-info</module>
       <module>db-updater</module>
       <module>info-service</module>
       <module>telebot</module>
-        <module>ip-mon</module>
-        <module>ip-mon-client</module>
-        <module>price-info</module>
-        <module>mgmt-service</module>
-        <module>wrk-mgr</module>
+      <module>ip-mon</module>
+      <module>ip-mon-client</module>
+      <module>price-info</module>
+      <module>mgmt-service</module>
+      <module>wrk-mgr</module>
     </modules>
 
 </project>

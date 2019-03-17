@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ws.slink.mine.info.api.pool.PoolAPI;
 import ws.slink.mine.info.api.pool.PoolAPIFactory;
-import ws.slink.mine.info.conf.MinerInfo;
-import ws.slink.mine.info.model.PoolInfo;
-import ws.slink.mine.model.Pool;
+import ws.slink.mine.info.model.MinerInfo;
 import ws.slink.mine.mq.Sender;
+import ws.slink.mine.type.Pool;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

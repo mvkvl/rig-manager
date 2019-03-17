@@ -10,7 +10,7 @@ import ws.slink.notifier.TelegramNotifierBean;
 
 public class PriceInfoRunner implements CommandLineRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(PriceInfoRunner.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestRunner.class);
 
     @Value("${test.duration:0}")
     private int duration;
