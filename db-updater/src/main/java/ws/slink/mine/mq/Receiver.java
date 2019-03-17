@@ -56,5 +56,4 @@ public class Receiver {
         logger.debug("--- received info: ");
         in.stream().forEach(v -> logger.debug(v.toString()));
     }
-
 }

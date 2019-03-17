@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.stereotype.Component;
 import ws.slink.mine.info.*;
+import ws.slink.mine.type.Crypto;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,9 @@ public class InfluxDBWriter {
 
     @Value("${influxdb.metric.mq}")
     private String messageQueueMetric;
+
+    @Value("${influxdb.metric.portfolio}")
+    private String portfolioMetric;
 
     @PostConstruct
     public void init() {
@@ -148,6 +153,20 @@ public class InfluxDBWriter {
         writeMQMessage("price.info");
     }
 
+    public void writePortfolioInfo(Map<Crypto, Map<String, Double>> data) {
+        List<Point> points = new ArrayList<>();
+        data.keySet().stream().forEach(crypto ->
+            data.get(crypto).entrySet().stream().forEach(entry ->
+                points.add(
+                    Point.measurement(portfolioMetric)
+                         .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                         .tag("crypto", crypto.toString().toLowerCase())
+                         .addField(entry.getKey().toLowerCase(), entry.getValue())
+                         .build())));
+        logger.trace("Points: {}", points);
+        influxDBTemplate.write(points);
+    }
+
     private void writeMQMessage(String queueName) {
         Point p1 = Point.measurement(messageQueueMetric)
                         .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
@@ -161,5 +180,6 @@ public class InfluxDBWriter {
                         .build();
         influxDBTemplate.write(p1, p2);
     }
+
 
 }
